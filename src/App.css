@@ -2,9 +2,61 @@ body {
   background: #e8e8e8;
 }
 
-.app {
+.App {
   background: white;
   padding: 15px;
   border-radius: 6px;
   box-shadow: 3px 3px 9px #d4d4d4;
+}
+
+.chords-table {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding-left: 0;
+}
+
+.chords-table li {
+  padding: 10px;
+  border: 1px solid #e6e6e6;
+  margin-right: 10px;
+  font-size: 18px;
+  border-radius: 3px;
+  min-width: 50px;
+  text-align: center;
+}
+
+.app-button {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  border: none;
+  padding: 10px 30px;
+  background: red;
+  color: white;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.displayed-chord {
+  text-align: center;
+  font-size: 72px;
+}
+
+.pulsed {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  } 
 }
