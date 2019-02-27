@@ -16,6 +16,8 @@ class App extends Component {
       pickedRandomChords.push(CHORDS[Math.floor(Math.random()*CHORDS.length)]) 
     }
 
+    console.log(pickedRandomChords)
+
     this.setState({
       pickedChords: pickedRandomChords
     })
@@ -24,6 +26,7 @@ class App extends Component {
 
   displayPickedCHord = () => {
     let i = 0;  
+    console.log(this.state)
     let pickedChords = this.state.pickedChords;
 
     setInterval(function() {            
@@ -31,6 +34,7 @@ class App extends Component {
         if (i == pickedChords.length) i = 0;   
     }, 1000);    
   }
+
 
   render() {
     const { pickedChords } = this.state;
