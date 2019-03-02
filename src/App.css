@@ -27,15 +27,16 @@ body {
 }
 
 .app-button {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
   border: none;
   padding: 10px 30px;
   background: red;
   color: white;
   font-size: 18px;
   text-transform: uppercase;
+}
+
+.app-options {
+  padding: 25px 15px;
 }
 
 .displayed-chord, .next-displayed-chord {
@@ -49,6 +50,29 @@ body {
   color: #e0e0e0;
   position: absolute;
   top: 36px;
+}
+
+.option-row {
+  padding: 15px;
+  background: #f3f3f3;
+}
+
+.option-row label {
+  padding: 5px 0;
+  font-weight: bold;
+}
+
+.option-row input[type="number"] {
+  width: 100%;
+  padding: 5px 10px;
+}
+
+.option-row input[type="radio"] {
+  margin-top: 10px;
+}
+
+.option-row .radio-val {
+  margin-right: 20px;
 }
 
 .pulsed {
