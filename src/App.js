@@ -6,8 +6,11 @@ const CHORDS = ['C', 'D', 'Dm', 'E', 'Em', 'E7', 'F', 'Fm', 'G', 'G7', 'A', 'Am'
 class App extends Component {
 
   state = {
-    pickedChords: [],
+    pickedRandomChords: [],
+    randomChord: '',
+    nextRandomChord: ''
   }
+  interval = null
 
   pickChords = () => {
     let pickedRandomChords = []
@@ -16,25 +19,31 @@ class App extends Component {
       pickedRandomChords.push(CHORDS[Math.floor(Math.random()*CHORDS.length)]) 
     }
 
-    console.log(pickedRandomChords)
-
     this.setState({
-      pickedChords: pickedRandomChords
+      pickedRandomChords: pickedRandomChords
     })
 
+    let i = 0;
+    let j = 1;  
+    if (this.interval != null) {
+      clearInterval(this.interval)
+    }
+    this.interval = setInterval(() => {            
+        this.setState({ 
+          randomChord: pickedRandomChords[i++], 
+          nextRandomChord: pickedRandomChords[j++] 
+        })   
+
+        if (i == pickedRandomChords.length) {
+          i = 0;          
+        }
+        else if (j == pickedRandomChords.length) {
+          j = 0 
+        }
+        
+    }, 2000);  
+
   }
-
-  displayPickedCHord = () => {
-    let i = 0;  
-    console.log(this.state)
-    let pickedChords = this.state.pickedChords;
-
-    setInterval(function() {            
-        document.getElementById('player').innerHTML = '<p class="displayed-chord">'+pickedChords[i++] +'</p>';   
-        if (i == pickedChords.length) i = 0;   
-    }, 1000);    
-  }
-
 
   render() {
     const { pickedChords } = this.state;
@@ -53,10 +62,13 @@ class App extends Component {
           </div>
           <div className="col-sm-12">
                 <button className="app-button" onClick={this.pickChords}>Start</button>
-                <button className="app-button" onClick={this.displayPickedCHord}>Start</button>
           </div>
           <div id="player" className="col-sm-12">
+            <p className="displayed-chord">{this.state.randomChord} 
+              <span className="next-displayed-chord">{this.state.nextRandomChord}</span>
+            </p>
             
+            <p>{this.state.pickedRandomChords}</p>
           </div>
         </div>
       </div>

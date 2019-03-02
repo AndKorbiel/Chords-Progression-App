@@ -38,9 +38,17 @@ body {
   text-transform: uppercase;
 }
 
-.displayed-chord {
+.displayed-chord, .next-displayed-chord {
   text-align: center;
-  font-size: 72px;
+  font-size: 92px;
+}
+
+.next-displayed-chord {
+  font-size: 52px;
+  margin-left: 52px;
+  color: #e0e0e0;
+  position: absolute;
+  top: 36px;
 }
 
 .pulsed {
