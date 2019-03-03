@@ -9,19 +9,70 @@ class App extends Component {
     pickedRandomChords: [],
     randomChord: '',
     nextRandomChord: '',
-    chordsQuantity: 0
+    chordsQuantity: 0,
+    BPM: 3000,
+    errorMessage: '',
+    started: 'Start'
   }
+
   interval = null
+
+  getNumberOfChords = (e) => {
+    let number = e.target.value;
+    if (number <= 12) {
+      this.setState({
+          chordsQuantity: number,
+          errorMessage: ''
+      })
+    }
+    else {
+        this.setState({
+            chordsQuantity: 12,
+            errorMessage: 'Max value is 12'
+        })
+    }
+  }
+
+  getBPM = (e) => {
+    let value = e.target.value;
+    let currentBPM = 3000
+
+    switch(value) {
+      case '80' :
+        currentBPM = 3000
+        break;
+      case '90' :
+        currentBPM = 2668
+        break
+      case '110' :
+        currentBPM = 2180
+        break
+      case '120' :
+        currentBPM = 2000
+        break
+      case '140' :
+        currentBPM = 1716
+        break
+      case '160' :
+        currentBPM = 1500
+    }
+
+    this.setState({
+      BPM: currentBPM
+    })
+
+  }
 
   pickChords = () => {
     let pickedRandomChords = []
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < this.state.chordsQuantity; i++) {
       pickedRandomChords.push(CHORDS[Math.floor(Math.random()*CHORDS.length)]) 
     }
 
     this.setState({
-      pickedRandomChords: pickedRandomChords
+      pickedRandomChords: pickedRandomChords,
+      started: 'Update'
     })
 
     let i = 0;
@@ -42,7 +93,7 @@ class App extends Component {
           j = 0 
         }
         
-    }, 2000);  
+    }, this.state.BPM);  
 
   }
 
@@ -56,7 +107,7 @@ class App extends Component {
               <ul className="chords-table">
                 {CHORDS.map((chord) => {
                   return (
-                    <li>{chord}</li>
+                    <li key={chord}>{chord}</li>
                   )
                 })}
               </ul>
@@ -64,20 +115,24 @@ class App extends Component {
           <div className="col-sm-12 app-options">
             <div className="option-row row">
               <div className="col-sm-12 col-md-4">
-                <label>How many chords do You want to train?</label>
+                <label>How many chords do You want to practise?</label>
+                <span className="error">{this.state.errorMessage}</span>
               </div>
               <div className="col-sm-12 col-md-8">
-                <input type="number" />
+                <input type="number" onChange={e => this.getNumberOfChords(e)} />
               </div>    
             </div>
             <div className="option-row row">
               <div className="col-sm-12 col-md-4">
-              <label>Chose displaying rythm</label>
+              <label>Choose BPM</label>
               </div>
-              <div className="col-sm-12 col-md-8">
-                <input type="radio" name="gender" value="80" /> <span class="radio-val">80</span>
-                <input type="radio" name="gender" value="120" /> <span class="radio-val">120</span> 
-                <input type="radio" name="gender" value="160" /> <span class="radio-val">160</span> 
+              <div className="col-sm-12 col-md-8" onChange={e => this.getBPM(e)}>
+                <input type="radio" name="gender" value="80" /> <span className="radio-val">80</span>
+                <input type="radio" name="gender" value="90" /> <span className="radio-val">90</span>
+                <input type="radio" name="gender" value="110" /> <span className="radio-val">110</span>
+                <input type="radio" name="gender" value="120" /> <span className="radio-val">120</span> 
+                <input type="radio" name="gender" value="140" /> <span className="radio-val">140</span> 
+                <input type="radio" name="gender" value="160" /> <span className="radio-val">160</span> 
               </div>  
             </div> 
             <div className="option-row row">
@@ -85,7 +140,7 @@ class App extends Component {
                 <label>Everything ready?</label>
               </div> 
               <div className="col-sm-12 col-md-8">
-                <button className="app-button" onClick={this.pickChords}>Start</button>
+                <button className="app-button" onClick={this.pickChords}>{this.state.started}</button>
               </div> 
             </div>                    
           </div>

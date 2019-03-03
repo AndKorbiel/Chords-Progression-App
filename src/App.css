@@ -75,6 +75,13 @@ body {
   margin-right: 20px;
 }
 
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: -10px;
+    display: block;
+}
+
 .pulsed {
   animation: pulse 2s infinite;
 }
