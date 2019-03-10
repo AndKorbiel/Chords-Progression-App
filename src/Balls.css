@@ -1,0 +1,46 @@
+.ball-cont {
+  display: flex;
+  justify-content: center;
+}
+
+.ball {
+  margin-top: 40px;
+  width: 20px;
+  height: 20px;
+  background: red;
+  border-radius: 40px;
+  text-align: center;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.bouncing.one {
+  animation: bounce 0.375s infinite;
+}
+
+.bouncing.two {
+  animation: bounce 0.429s infinite;
+}
+
+.bouncing.three {
+  animation: bounce 0.5s infinite;
+}
+
+.bouncing.four {
+    animation: bounce 0.545s infinite;
+}
+
+.bouncing.five {
+    animation: bounce 0.667s infinite;
+}
+
+.bouncing.six {
+    animation: bounce 0.75s infinite;
+}
+  
+
+@keyframes bounce {
+  0% {margin-top: 40px }
+  50% {margin-top: 20px}
+  100% {margin-top: 40px}
+}

@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
+import Balls from './ball.js'
 
 const CHORDS = ['C', 'D', 'Dm', 'E', 'Em', 'E7', 'F', 'Fm', 'G', 'G7', 'A', 'Am', 'A7', 'B', 'Bm']
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.child = React.createRef();
+  }
 
   state = {
     pickedRandomChords: [],
@@ -12,7 +18,7 @@ class App extends Component {
     chordsQuantity: 0,
     BPM: 3000,
     errorMessage: '',
-    started: 'Start'
+    started: 'Start',
   }
 
   interval = null
@@ -80,6 +86,7 @@ class App extends Component {
     if (this.interval != null) {
       clearInterval(this.interval)
     }
+
     this.interval = setInterval(() => {            
         this.setState({ 
           randomChord: pickedRandomChords[i++], 
@@ -92,13 +99,15 @@ class App extends Component {
         else if (j == pickedRandomChords.length) {
           j = 0 
         }
+
+        this.child.current.ballJump()
         
     }, this.state.BPM);  
 
   }
 
   render() {
-    const { pickedChords } = this.state;
+    const { pickedChords, BPM } = this.state;
 
     return (
       <div className="App container">
@@ -145,6 +154,7 @@ class App extends Component {
             </div>                    
           </div>
           <div id="player" className="col-sm-12">
+          <Balls BPM={BPM} ref={this.child} />
             <p className="displayed-chord">{this.state.randomChord} 
               <span className="next-displayed-chord">{this.state.nextRandomChord}</span>
             </p>
