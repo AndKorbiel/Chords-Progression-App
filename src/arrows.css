@@ -1,0 +1,60 @@
+.arrow-cont {
+  display: flex;
+  justify-content: center;
+}
+
+.arrow {
+  margin-top: 40px;
+  font-size: 30px;
+  color: red;
+  text-align: center;
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-bottom: 10px;
+}
+
+.fa-arrow-pass {
+  opacity: 0.2;
+}
+
+.fa-arrow-up, .fa-arrow-down {
+  opacity: 1;
+}
+
+.fa-arrow-pass::before {
+  content: "\f7a4";
+}
+
+.arrow:nth-child(even) {
+    color: #d0d0d0;
+}
+
+.highlight.one {
+  animation: color 0.1875s infinite;
+}
+
+.highlight.two {
+  animation: color 0.2145s infinite;
+}
+
+.highlight.three {
+  animation: color 0.25s infinite;
+}
+
+.highlight.four {
+    animation: color 0.2725s infinite;
+}
+
+.highlight.five {
+    animation: color 0.3335s infinite;
+}
+
+.highlight.six {
+    animation: color 0.375s infinite;
+}
+  
+@keyframes color {
+  0% {color: black }
+  50% {color: black}
+  100% {color: black}
+}
