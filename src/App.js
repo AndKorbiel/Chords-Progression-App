@@ -3,30 +3,31 @@ import './App.css';
 import Arrows from './arrow.js';
 import RadioButton from './radio-button.js';
 
+// const x = (id, value) => ({ id, value })
+
 const CHORDS = ['C', 'D', 'Dm', 'E', 'Em', 'E7', 'F', 'Fm', 'G', 'G7', 'A', 'Am', 'A7', 'B', 'Bm']
+const DEFAULT_STRUMMING_PATTERN = [{id: '1', value: 'down'}, {id: '1and', value: 'down'}, {id: '2', value: 'down'}, {id: '2and', value: 'down'}, {id: '3', value: 'down'}, {id: '3and', value: 'down'}, {id: '4', value: 'down'}, {id: '4and', value: 'down'},]
+const BPM_OPTIONS = [80, 90, 110, 120, 160]
 
 class App extends Component {
-
-  constructor(props) {
-    super(props);
-    this.child = React.createRef();
-  }
 
   state = {
     pickedRandomChords: [],
     randomChord: '',
     nextRandomChord: '',
     chordsQuantity: 0,
-    BPM: 3000,
-    strummingPattern: [{id: '1', value: 'down'}, {id: '1and', value: 'down'}, {id: '2', value: 'down'}, {id: '2and', value: 'down'}, {id: '3', value: 'down'}, {id: '3and', value: 'down'}, {id: '4', value: 'down'}, {id: '4and', value: 'down'},],
+    bpm: '80',
+    strummingPattern: DEFAULT_STRUMMING_PATTERN,
     errorMessage: '',
     started: 'Start',
   }
 
+  child = React.createRef();
+  currentBPM = 3000
   interval = null
 
   getNumberOfChords = (e) => {
-    let number = e.target.value;
+    let number = Number(e.target.value);
     if (number <= 12) {
       this.setState({
           chordsQuantity: number,
@@ -43,30 +44,33 @@ class App extends Component {
 
   getBPM = (e) => {
     let value = e.target.value;
-    let currentBPM = 3000
 
     switch(value) {
       case '80' :
-        currentBPM = 3000
+        this.currentBPM = 3000
         break;
       case '90' :
-        currentBPM = 2668
+        this.currentBPM = 2668
         break
       case '110' :
-        currentBPM = 2180
+        this.currentBPM = 2180
         break
       case '120' :
-        currentBPM = 2000
+        this.currentBPM = 2000
         break
       case '140' :
-        currentBPM = 1716
+        this.currentBPM = 1716
         break
       case '160' :
-        currentBPM = 1500
+        this.currentBPM = 1500
     }
 
     this.setState({
-      BPM: currentBPM
+      bpm: value
+    }, () => {
+      if (this.interval) {
+        this.pickChords()
+      }
     })
 
   }
@@ -116,12 +120,16 @@ class App extends Component {
 
         this.child.current.arrowHighlight()
         
-    }, this.state.BPM);  
+    }, this.currentBPM);  
 
   }
 
   render() {
     const { pickedChords, BPM, strummingPattern } = this.state;
+
+// input
+// this.props.onChange - istienej taki props w inpucie
+// this.props.onChange(event) - wywola onchange podajac event jaki zaszedl gdy zajdzie
 
     return (
       <div className="App container">
@@ -142,20 +150,22 @@ class App extends Component {
                 <span className="error">{this.state.errorMessage}</span>
               </div>
               <div className="col-sm-12 col-md-9">
-                <input type="number" onChange={e => this.getNumberOfChords(e)} />
+                <input type="number" onChange={this.getNumberOfChords} value={this.state.chordsQuantity} />
               </div>    
             </div>
             <div className="option-row row">
               <div className="col-sm-12 col-md-3">
               <label>Choose BPM</label>
               </div>
-              <div className="col-sm-12 col-md-9" onChange={e => this.getBPM(e)}>
-                <input type="radio" name="bpm" value="80" /> <span className="radio-val">80</span>
-                <input type="radio" name="bpm" value="90" /> <span className="radio-val">90</span>
-                <input type="radio" name="bpm" value="110" /> <span className="radio-val">110</span>
-                <input type="radio" name="bpm" value="120" /> <span className="radio-val">120</span> 
-                <input type="radio" name="bpm" value="140" /> <span className="radio-val">140</span> 
-                <input type="radio" name="bpm" value="160" /> <span className="radio-val">160</span> 
+              <div className="col-sm-12 col-md-9" onChange={this.getBPM}>
+              {BPM_OPTIONS.map((element) => {
+                return (
+                  <React.Fragment key={`bmp_${element}`}>
+                    <input type="radio" name="bpm" value={element} checked={element == this.state.bpm} /> 
+                    <span className="radio-val"> {element}</span>
+                  </React.Fragment>
+                )
+              })}
               </div>  
             </div> 
             <div className="option-row row">
@@ -176,7 +186,7 @@ class App extends Component {
             </div>                    
           </div>
           <div id="player" className="col-sm-12">
-          <Arrows BPM={BPM} strummingPattern={strummingPattern} ref={this.child} />
+          <Arrows BPM={this.currentBPM} strummingPattern={strummingPattern} ref={this.child} />
             <p className="displayed-chord">{this.state.randomChord} 
               <span className="next-displayed-chord">{this.state.nextRandomChord}</span>
             </p>
