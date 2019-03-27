@@ -1,77 +1,95 @@
-import React, { Component } from 'react';
-import './arrows.css';
+import React, { Component } from "react";
+import "./arrows.css";
 
-const arrowS = ['arrow1', 'arrow2', 'arrow3', 'arrow4', 'arrow5', 'arrow6', 'arrow7', 'arrow8']
+const arrowS = [
+  "arrow1",
+  "arrow2",
+  "arrow3",
+  "arrow4",
+  "arrow5",
+  "arrow6",
+  "arrow7",
+  "arrow8"
+];
 
 class arrows extends Component {
+  state = {
+    arrowsState: arrowS.map(() => ({ isHighlighted: false, speed: "one" }))
+  };
 
   arrowHighlight = () => {
-      let arrows = document.querySelectorAll('.arrow')
-      let i = 0;
-      let speed = 'one'
+    //   let arrows = document.querySelectorAll('.arrow')
+    let i = 0;
+    let speed = this.getSpeed();
 
-      console.log('This props value:', this.props.BPM)
+    console.log("This props value:", this.props.BPM);
 
-      if (this.props.BPM == 1500) {
-          speed = 'one'
+    let highlight = () => {
+      const newArrowsStateCopy = [...this.state.arrowsState];
+      if (i > 0) {
+        newArrowsStateCopy[i - 1] = { isHighlighted: false, speed };
+        newArrowsStateCopy[i] = { isHighlighted: true, speed };
+        i++;
+      } else if (i == arrows.length) {
+        newArrowsStateCopy[i] = { isHighlighted: false, speed };
+        i = 0;
+        highlight();
+      } else {
+        newArrowsStateCopy[i] = { isHighlighted: true, speed };
+        i++;
       }
 
-      else if (this.props.BPM == 1716) {
-        speed = 'two'
-      }
+      this.setState(
+        {
+          arrowsState: newArrowsStateCopy
+        },
+        () => setTimeout(highlight, this.props.BPM / 8)
+      );
+    };
 
-      else if (this.props.BPM == 2000) {
-            speed = 'three'
-      }
+    highlight();
+  };
 
-      else if (this.props.BPM == 2180) {
-            speed = 'four'
-      }
+  getSpeed = () => {
+    let speed = "one";
 
-      else if (this.props.BPM == 2668) {
-          speed = 'five'
-      }
+    if (this.props.BPM == 1500) {
+      speed = "one";
+    } else if (this.props.BPM == 1716) {
+      speed = "two";
+    } else if (this.props.BPM == 2000) {
+      speed = "three";
+    } else if (this.props.BPM == 2180) {
+      speed = "four";
+    } else if (this.props.BPM == 2668) {
+      speed = "five";
+    } else if (this.props.BPM == 3000) {
+      speed = "six";
+    }
+    return speed;
+  };
 
-      else if (this.props.BPM == 3000) {
-          speed = 'six'
-      }
-
-      else {}
-
-      let highlight = () => {
-          if (i > 0) {
-              arrows[i-1].classList.remove('highlight', `${speed}`)
-              arrows[i].classList.add('highlight', `${speed}`)
-              i++
-          }
-
-          else if (i == arrows.length) {
-              arrows[i].classList.remove('highlight', `${speed}`)
-              i = 0
-              highlight()
-
-          }
-          else {
-              arrows[i].classList.add('highlight', `${speed}`)
-              i++
-          }
-
-          setTimeout(highlight, this.props.BPM / 8);
-      }
-
-      highlight()
-
-  }
-  
   render() {
     const { BPM, strummingPattern } = this.props;
-
     return (
-        <div className="arrow-cont">
-            {strummingPattern.map((element) => {
-                return <div className={'arrow fas fa-arrow-'+element.value} key={element.id}> </div>
-            })}
-        </div>
+      <div className="arrow-cont">
+        {strummingPattern.map((element, index) => {
+          const arrowState = this.state.arrowsState[index];
+          const highlightedClass = arrowState.isHighlighted
+            ? " highlighted "
+            : " ";
+          const classes = highlightedClass + arrowState.speed;
+
+          return (
+            <div
+              className={"arrow fas fa-arrow-" + element.value + classes}
+              key={element.id}
+            >
+              {" "}
+            </div>
+          );
+        })}
+      </div>
     );
   }
 }
