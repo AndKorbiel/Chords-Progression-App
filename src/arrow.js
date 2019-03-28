@@ -18,11 +18,9 @@ class arrows extends Component {
   };
 
   arrowHighlight = () => {
-    //   let arrows = document.querySelectorAll('.arrow')
+
     let i = 0;
     let speed = this.getSpeed();
-
-    console.log("This props value:", this.props.BPM);
 
     let highlight = () => {
       const newArrowsStateCopy = [...this.state.arrowsState];
@@ -30,7 +28,7 @@ class arrows extends Component {
         newArrowsStateCopy[i - 1] = { isHighlighted: false, speed };
         newArrowsStateCopy[i] = { isHighlighted: true, speed };
         i++;
-      } else if (i == arrows.length) {
+      } else if (i == arrowS.length) {
         newArrowsStateCopy[i] = { isHighlighted: false, speed };
         i = 0;
         highlight();
@@ -53,6 +51,8 @@ class arrows extends Component {
   getSpeed = () => {
     let speed = "one";
 
+    console.log(this.props.BPM)
+
     if (this.props.BPM == 1500) {
       speed = "one";
     } else if (this.props.BPM == 1716) {
@@ -71,6 +71,7 @@ class arrows extends Component {
 
   render() {
     const { BPM, strummingPattern } = this.props;
+
     return (
       <div className="arrow-cont">
         {strummingPattern.map((element, index) => {

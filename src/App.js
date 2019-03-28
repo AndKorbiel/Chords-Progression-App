@@ -32,7 +32,7 @@ const DEFAULT_STRUMMING_PATTERN = [
   { id: "4", value: "down" },
   { id: "4and", value: "down" }
 ];
-const BPM_OPTIONS = [80, 90, 110, 120, 160];
+const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
 // const RADIOBUTTONS = ['1', '1and', '2', '2and', '3', '3and', '4', '4and'];
 
 class App extends Component {

@@ -29,27 +29,27 @@
     color: #d0d0d0;
 }
 
-.highlight.one {
+.highlighted.one {
   animation: color 0.1875s infinite;
 }
 
-.highlight.two {
+.highlighted.two {
   animation: color 0.2145s infinite;
 }
 
-.highlight.three {
+.highlighted.three {
   animation: color 0.25s infinite;
 }
 
-.highlight.four {
+.highlighted.four {
     animation: color 0.2725s infinite;
 }
 
-.highlight.five {
+.highlighted.five {
     animation: color 0.3335s infinite;
 }
 
-.highlight.six {
+.highlighted.six {
     animation: color 0.375s infinite;
 }
   
