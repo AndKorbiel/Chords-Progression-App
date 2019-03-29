@@ -12,18 +12,27 @@ body {
 .chords-table {
   list-style: none;
   display: flex;
-  justify-content: center;
   padding-left: 0;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .chords-table li {
   padding: 10px;
   border: 1px solid #e6e6e6;
+  background: white;
   margin-right: 10px;
   font-size: 18px;
   border-radius: 3px;
   min-width: 50px;
+  margin-bottom: 10px;
   text-align: center;
+  cursor: pointer;
+}
+
+.chords-table li.random {
+  background: #e2e2e2;
+  padding: 10px 37px;
 }
 
 .app-button {
@@ -62,8 +71,15 @@ body {
   font-weight: bold;
 }
 
+.app-button.random {
+    width: auto;
+    padding: 6px 10px;
+    background: #c1c1c1;
+    margin-left: -3px;
+}
+
 .option-row input[type="number"] {
-  width: 100%;
+  width: 56%;
   padding: 5px 10px;
 }
 

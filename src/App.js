@@ -22,6 +22,7 @@ const CHORDS = [
   "B",
   "Bm"
 ];
+
 const DEFAULT_STRUMMING_PATTERN = [
   { id: "1", value: "down" },
   { id: "1and", value: "down" },
@@ -30,7 +31,8 @@ const DEFAULT_STRUMMING_PATTERN = [
   { id: "3", value: "down" },
   { id: "3and", value: "down" },
   { id: "4", value: "down" },
-  { id: "4and", value: "down" }
+  { id: "4a" +
+          "nd", value: "down" }
 ];
 const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
 // const RADIOBUTTONS = ['1', '1and', '2', '2and', '3', '3and', '4', '4and'];
@@ -112,19 +114,21 @@ class App extends Component {
     });
   };
 
+  getRandomChords = () => {
+      let pickedRandomChords = [];
+
+      for (let i = 0; i < this.state.chordsQuantity; i++) {
+          pickedRandomChords.push(
+              CHORDS[Math.floor(Math.random() * CHORDS.length)]
+          );
+      }
+
+      this.setState({
+          pickedRandomChords: pickedRandomChords,
+      });
+  }
+
   pickChords = () => {
-    let pickedRandomChords = [];
-
-    for (let i = 0; i < this.state.chordsQuantity; i++) {
-      pickedRandomChords.push(
-        CHORDS[Math.floor(Math.random() * CHORDS.length)]
-      );
-    }
-
-    this.setState({
-      pickedRandomChords: pickedRandomChords,
-      started: "Update"
-    });
 
     let i = 0;
     let j = 1;
@@ -134,18 +138,22 @@ class App extends Component {
 
     this.interval = setInterval(() => {
       this.setState({
-        randomChord: pickedRandomChords[i++],
-        nextRandomChord: pickedRandomChords[j++]
+        randomChord: this.state.pickedRandomChords[i++],
+        nextRandomChord: this.state.pickedRandomChords[j++]
       });
 
-      if (i == pickedRandomChords.length) {
+      if (i == this.state.pickedRandomChords.length) {
         i = 0;
-      } else if (j == pickedRandomChords.length) {
+      } else if (j == this.state.pickedRandomChords.length) {
         j = 0;
       }
 
       this.child.current.arrowHighlight();
     }, this.currentBPM);
+
+      this.setState({
+          started: "Update"
+      });
   };
 
   render() {
@@ -159,16 +167,24 @@ class App extends Component {
       <div className="App container">
         <div className="row">
           <div className="col-sm-12">
-            <ul className="chords-table">
-              {CHORDS.map(chord => {
-                return <li key={chord}>{chord}</li>;
-              })}
-            </ul>
+
           </div>
           <div className="col-sm-12 app-options">
+              <div className="option-row row">
+                  <div className="col-sm-12 col-md-3">
+                      <label>Pick Your own chords</label>
+                  </div>
+                  <div className="col-sm-12 col-md-9">
+                      <ul className="chords-table">
+                          {CHORDS.map(chord => {
+                              return <li key={chord} value={chord} className={this.state.isSelected} onClick={this.selectChord}>{chord}</li>;
+                          })}
+                      </ul>
+                  </div>
+              </div>
             <div className="option-row row">
               <div className="col-sm-12 col-md-3">
-                <label>How many chords do You want to practise?</label>
+                <label>Or use random set</label>
                 <span className="error">{this.state.errorMessage}</span>
               </div>
               <div className="col-sm-12 col-md-9">
@@ -177,6 +193,7 @@ class App extends Component {
                   onChange={this.getNumberOfChords}
                   value={this.state.chordsQuantity}
                 />
+                  <button className="app-button random" onClick={this.getRandomChords}>Get random chords</button>
               </div>
             </div>
             <div className="option-row row">
