@@ -31,15 +31,14 @@ const DEFAULT_STRUMMING_PATTERN = [
   { id: "3", value: "down" },
   { id: "3and", value: "down" },
   { id: "4", value: "down" },
-  { id: "4a" +
-          "nd", value: "down" }
+  { id: "4and", value: "down" }
 ];
 const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
-// const RADIOBUTTONS = ['1', '1and', '2', '2and', '3', '3and', '4', '4and'];
 
 class App extends Component {
   state = {
-    pickedRandomChords: [],
+    pickedChords: [],
+    selectedChords: CHORDS.map((chord) => ({ value: chord, isSelected: false } )),
     randomChord: "",
     nextRandomChord: "",
     chordsQuantity: 0,
@@ -55,15 +54,16 @@ class App extends Component {
 
   getNumberOfChords = e => {
     let number = Number(e.target.value);
-    if (number <= 12) {
+    if (number <= 12 && number > 1) {
       this.setState({
         chordsQuantity: number,
         errorMessage: ""
       });
-    } else {
+    }
+    else {
       this.setState({
-        chordsQuantity: 12,
-        errorMessage: "Max value is 12"
+        chordsQuantity: 0,
+        errorMessage: "Value must be in range 2 - 12"
       });
     }
   };
@@ -124,9 +124,13 @@ class App extends Component {
       }
 
       this.setState({
-          pickedRandomChords: pickedRandomChords,
+          pickedChords: pickedRandomChords,
       });
-  }
+  };
+
+  selectChord = (e) => {
+    let selectedChords = []
+  };
 
   pickChords = () => {
 
@@ -138,13 +142,13 @@ class App extends Component {
 
     this.interval = setInterval(() => {
       this.setState({
-        randomChord: this.state.pickedRandomChords[i++],
-        nextRandomChord: this.state.pickedRandomChords[j++]
+        randomChord: this.state.pickedChords[i++],
+        nextRandomChord: this.state.pickedChords[j++]
       });
 
-      if (i == this.state.pickedRandomChords.length) {
+      if (i == this.state.pickedChords.length) {
         i = 0;
-      } else if (j == this.state.pickedRandomChords.length) {
+      } else if (j == this.state.pickedChords.length) {
         j = 0;
       }
 
@@ -177,7 +181,7 @@ class App extends Component {
                   <div className="col-sm-12 col-md-9">
                       <ul className="chords-table">
                           {CHORDS.map(chord => {
-                              return <li key={chord} value={chord} className={this.state.isSelected} onClick={this.selectChord}>{chord}</li>;
+                              return <li key={chord} value={chord} className={this.state.isSelected} onClick={(e) => this.selectChord(e)}>{chord}</li>;
                           })}
                       </ul>
                   </div>
@@ -245,6 +249,14 @@ class App extends Component {
             </div>
           </div>
           <div id="player" className="col-sm-12">
+            <ul className="chords-table centered">
+                {pickedChords.map(chord => {
+                  return (
+                    <li key={chord}>{chord}</li>
+                  )
+                  })
+                }
+            </ul>
             <Arrows
               BPM={this.currentBPM}
               strummingPattern={strummingPattern}

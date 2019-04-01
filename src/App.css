@@ -17,6 +17,10 @@ body {
   justify-content: flex-start;
 }
 
+.chords-table.centered {
+    justify-content: center;
+}
+
 .chords-table li {
   padding: 10px;
   border: 1px solid #e6e6e6;
