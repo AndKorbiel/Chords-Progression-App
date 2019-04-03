@@ -9,9 +9,9 @@ class RadioButton extends Component {
         return (
                 <form className="radio-option" onChange={onChange}>    
                     <span className="radio-title">{buttonName}</span>
-                    <input type="radio" name="Strumming-pattern" value="down" checked={currentValue == 'down'} /> <span className="radio-val">Down</span> 
-                    <input type="radio" name="Strumming-pattern" value="up" checked={currentValue == 'up'}/> <span className="radio-val">Up</span> 
-                    <input type="radio" name="Strumming-pattern" value="pass" checked={currentValue == 'pass'} /> <span className="radio-val">Pass</span> 
+                    <input type="radio" name="Strumming-pattern" value="down" checked={currentValue === 'down'} /> <span className="radio-val">Down</span>
+                    <input type="radio" name="Strumming-pattern" value="up" checked={currentValue === 'up'}/> <span className="radio-val">Up</span>
+                    <input type="radio" name="Strumming-pattern" value="pass" checked={currentValue === 'pass'} /> <span className="radio-val">Pass</span>
                 </form>
         )
     }

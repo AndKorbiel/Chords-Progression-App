@@ -28,7 +28,7 @@ class arrows extends Component {
         newArrowsStateCopy[i - 1] = { isHighlighted: false, speed };
         newArrowsStateCopy[i] = { isHighlighted: true, speed };
         i++;
-      } else if (i == arrowS.length) {
+      } else if (i === arrowS.length) {
         newArrowsStateCopy[i] = { isHighlighted: false, speed };
         i = 0;
         highlight();
@@ -70,7 +70,7 @@ class arrows extends Component {
   };
 
   render() {
-    const { BPM, strummingPattern } = this.props;
+    const { strummingPattern } = this.props;
 
     return (
       <div className="arrow-cont">

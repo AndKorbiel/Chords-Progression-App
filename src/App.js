@@ -38,7 +38,7 @@ const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
 class App extends Component {
   state = {
     pickedChords: [],
-    selectedChords: CHORDS.map((chord) => ({ value: chord, isSelected: false } )),
+    selectedChords: [],
     randomChord: "",
     nextRandomChord: "",
     chordsQuantity: 0,
@@ -129,7 +129,23 @@ class App extends Component {
   };
 
   selectChord = (e) => {
-    let selectedChords = []
+
+    let updatedChords = [...this.state.selectedChords];
+    let chord = e.target.id;
+
+    if (updatedChords.indexOf(chord) > -1) {
+        updatedChords.splice(chord, 1)
+    }
+    else {
+        updatedChords.push(chord)
+    }
+
+    this.setState({
+        selectedChords: updatedChords
+    })
+
+      console.log(this.state.selectedChords)
+
   };
 
   pickChords = () => {
@@ -181,7 +197,7 @@ class App extends Component {
                   <div className="col-sm-12 col-md-9">
                       <ul className="chords-table">
                           {CHORDS.map(chord => {
-                              return <li key={chord} value={chord} className={this.state.isSelected} onClick={(e) => this.selectChord(e)}>{chord}</li>;
+                              return <li key={chord} id={chord} className={this.state.isSelected} onClick={(e) => this.selectChord(e)}>{chord}</li>;
                           })}
                       </ul>
                   </div>
@@ -252,7 +268,7 @@ class App extends Component {
             <ul className="chords-table centered">
                 {pickedChords.map(chord => {
                   return (
-                    <li key={chord}>{chord}</li>
+                    <li key={chord + pickedChords.indexOf(chord)+ Math.random(1* Math.random())}>{chord}</li>
                   )
                   })
                 }
