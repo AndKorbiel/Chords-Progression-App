@@ -3,8 +3,6 @@ import "./App.css";
 import Arrows from "./arrow.js";
 import RadioButton from "./radio-button.js";
 
-// const x = (id, value) => ({ id, value })
-
 const CHORDS = [
   "C",
   "D",
@@ -38,7 +36,6 @@ const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
 class App extends Component {
   state = {
     pickedChords: [],
-    selectedChords: [],
     randomChord: "",
     nextRandomChord: "",
     chordsQuantity: 0,
@@ -104,14 +101,14 @@ class App extends Component {
   };
 
   getStrummingPattern = (e, id) => {
-    // console.log(e.target.value, id)
+
     const newPattern = [...this.state.strummingPattern];
-    // console.log newPattern)
     const updated = newPattern.find(el => el.id === id);
     updated.value = e.target.value;
     this.setState({
       strummingPattern: newPattern
     });
+
   };
 
   getRandomChords = () => {
@@ -130,22 +127,27 @@ class App extends Component {
 
   selectChord = (e) => {
 
-    let updatedChords = [...this.state.selectedChords];
+    let updatedChords = [...this.state.pickedChords];
     let chord = e.target.id;
 
-    if (updatedChords.indexOf(chord) > -1) {
-        updatedChords.splice(chord, 1)
-    }
-    else {
-        updatedChords.push(chord)
-    }
+    updatedChords.push(chord)
 
     this.setState({
-        selectedChords: updatedChords
-    })
+        pickedChords: updatedChords
+    });
 
-      console.log(this.state.selectedChords)
+  };
 
+  removeChord = (e) => {
+      let currentChords = [...this.state.pickedChords];
+      let updatedChords = [];
+      let chord = e.target.id;
+
+      updatedChords = currentChords.filter(e => e !== chord);
+
+      this.setState({
+          pickedChords: updatedChords
+      });
   };
 
   pickChords = () => {
@@ -268,7 +270,7 @@ class App extends Component {
             <ul className="chords-table centered">
                 {pickedChords.map(chord => {
                   return (
-                    <li key={chord + pickedChords.indexOf(chord)+ Math.random(1* Math.random())}>{chord}</li>
+                    <li key={chord + pickedChords.indexOf(chord) + Math.floor(Math.random() * 1000) + 1} id={chord + pickedChords.indexOf(chord)+ Math.floor(Math.random() * 1000) + 1} onClick={(e) => this.removeChord(e)}>{chord}</li>
                   )
                   })
                 }
