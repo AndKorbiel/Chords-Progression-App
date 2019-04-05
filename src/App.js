@@ -50,14 +50,14 @@ class App extends Component {
   interval = null;
 
   getNumberOfChords = e => {
+    // zmieni nazwę - pobiera tylko wartość z inputa
     let number = Number(e.target.value);
     if (number <= 12 && number > 1) {
       this.setState({
         chordsQuantity: number,
         errorMessage: ""
       });
-    }
-    else {
+    } else {
       this.setState({
         chordsQuantity: 0,
         errorMessage: "Value must be in range 2 - 12"
@@ -101,57 +101,49 @@ class App extends Component {
   };
 
   getStrummingPattern = (e, id) => {
-
     const newPattern = [...this.state.strummingPattern];
     const updated = newPattern.find(el => el.id === id);
     updated.value = e.target.value;
     this.setState({
       strummingPattern: newPattern
     });
-
   };
 
   getRandomChords = () => {
-      let pickedRandomChords = [];
+    // zmienić nazwę - losuje akordy na postawie przekazej wartości
+    let pickedRandomChords = [];
 
-      for (let i = 0; i < this.state.chordsQuantity; i++) {
-          pickedRandomChords.push(
-              CHORDS[Math.floor(Math.random() * CHORDS.length)]
-          );
-      }
-
-      this.setState({
-          pickedChords: pickedRandomChords,
-      });
-  };
-
-  selectChord = (e) => {
-
-    let updatedChords = [...this.state.pickedChords];
-    let chord = e.target.id;
-
-    updatedChords.push(chord)
+    for (let i = 0; i < this.state.chordsQuantity; i++) {
+      pickedRandomChords.push(
+        CHORDS[Math.floor(Math.random() * CHORDS.length)]
+      );
+    }
 
     this.setState({
-        pickedChords: updatedChords
+      pickedChords: pickedRandomChords
     });
-
   };
 
-  removeChord = (e) => {
-      let currentChords = [...this.state.pickedChords];
-      let updatedChords = [];
-      let chord = e.target.id;
+  selectChord = chord => {
+    let updatedChords = [...this.state.pickedChords];
+    updatedChords.push(chord);
 
-      updatedChords = currentChords.filter(e => e !== chord);
+    this.setState({
+      pickedChords: updatedChords
+    });
+  };
 
-      this.setState({
-          pickedChords: updatedChords
-      });
+  removeChord = index => {
+    let updatedChords = [...this.state.pickedChords];
+    const usunietyElement = updatedChords.splice(index, 1);
+    // updatedChords jest tutaj bez `usunietyElement`
+
+    this.setState({
+      pickedChords: updatedChords
+    });
   };
 
   pickChords = () => {
-
     let i = 0;
     let j = 1;
     if (this.interval != null) {
@@ -173,9 +165,9 @@ class App extends Component {
       this.child.current.arrowHighlight();
     }, this.currentBPM);
 
-      this.setState({
-          started: "Update"
-      });
+    this.setState({
+      started: "Update"
+    });
   };
 
   render() {
@@ -188,22 +180,28 @@ class App extends Component {
     return (
       <div className="App container">
         <div className="row">
-          <div className="col-sm-12">
-
-          </div>
+          <div className="col-sm-12" />
           <div className="col-sm-12 app-options">
-              <div className="option-row row">
-                  <div className="col-sm-12 col-md-3">
-                      <label>Pick Your own chords</label>
-                  </div>
-                  <div className="col-sm-12 col-md-9">
-                      <ul className="chords-table">
-                          {CHORDS.map(chord => {
-                              return <li key={chord} id={chord} className={this.state.isSelected} onClick={(e) => this.selectChord(e)}>{chord}</li>;
-                          })}
-                      </ul>
-                  </div>
+            <div className="option-row row">
+              <div className="col-sm-12 col-md-3">
+                <label>Pick Your own chords</label>
               </div>
+              <div className="col-sm-12 col-md-9">
+                <ul className="chords-table">
+                  {CHORDS.map(chord => {
+                    return (
+                      <li
+                        key={chord}
+                        className={this.state.isSelected}
+                        onClick={() => this.selectChord(chord)}
+                      >
+                        {chord}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
             <div className="option-row row">
               <div className="col-sm-12 col-md-3">
                 <label>Or use random set</label>
@@ -215,7 +213,12 @@ class App extends Component {
                   onChange={this.getNumberOfChords}
                   value={this.state.chordsQuantity}
                 />
-                  <button className="app-button random" onClick={this.getRandomChords}>Get random chords</button>
+                <button
+                  className="app-button random"
+                  onClick={this.getRandomChords}
+                >
+                  Get random chords
+                </button>
               </div>
             </div>
             <div className="option-row row">
@@ -268,12 +271,16 @@ class App extends Component {
           </div>
           <div id="player" className="col-sm-12">
             <ul className="chords-table centered">
-                {pickedChords.map(chord => {
-                  return (
-                    <li key={chord + pickedChords.indexOf(chord) + Math.floor(Math.random() * 1000) + 1} id={chord + pickedChords.indexOf(chord)+ Math.floor(Math.random() * 1000) + 1} onClick={(e) => this.removeChord(e)}>{chord}</li>
-                  )
-                  })
-                }
+              {pickedChords.map((chord, index) => {
+                return (
+                  <li
+                    key={"chord" + index}
+                    onClick={() => this.removeChord(index)}
+                  >
+                    {chord}
+                  </li>
+                );
+              })}
             </ul>
             <Arrows
               BPM={this.currentBPM}
