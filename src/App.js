@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
-import Arrows from "./arrow.js";
 import RadioButton from "./radio-button.js";
+import Display from "./display";
 
 const CHORDS = [
   "C",
@@ -171,7 +171,7 @@ class App extends Component {
   };
 
   render() {
-    const { pickedChords, BPM, strummingPattern } = this.state;
+    const { pickedChords, strummingPattern, randomChord, nextRandomChord } = this.state;
 
     // input
     // this.props.onChange - istienej taki props w inpucie
@@ -269,32 +269,7 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <div id="player" className="col-sm-12">
-            <ul className="chords-table centered">
-              {pickedChords.map((chord, index) => {
-                return (
-                  <li
-                    key={"chord" + index}
-                    onClick={() => this.removeChord(index)}
-                  >
-                    {chord}
-                  </li>
-                );
-              })}
-            </ul>
-            <Arrows
-              BPM={this.currentBPM}
-              strummingPattern={strummingPattern}
-              ref={this.child}
-            />
-
-            <p className="displayed-chord">
-              {this.state.randomChord}
-              <span className="next-displayed-chord">
-                {this.state.nextRandomChord}
-              </span>
-            </p>
-          </div>
+          <Display strummingPattern={strummingPattern} pickedChords={pickedChords} randomChord={randomChord} nextRandomChord={nextRandomChord} currentBPM={this.currentBPM} onClick={this.removeChord} child={this.child} />
         </div>
       </div>
     );
