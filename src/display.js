@@ -3,6 +3,12 @@ import Arrows from "./arrow.js";
 
 class Display extends Component {
 
+    removeHandler = (index) => {
+        const x = index
+        console.log('z dzieckoa' + x)
+        this.props.onClick(x)
+    }
+
     render() {
 
         const { pickedChords, strummingPattern, randomChord, nextRandomChord, removeChord, currentBPM, child } = this.props;
@@ -14,9 +20,9 @@ class Display extends Component {
                         return (
                             <li
                                 key={"chord" + index}
-                                onClick={removeChord}
+                                onClick={() => this.removeHandler(index)}
                             >
-                                {chord}
+                                {chord} + {index}
                             </li>
                         );
                     })}

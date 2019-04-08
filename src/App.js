@@ -131,9 +131,11 @@ class App extends Component {
     this.setState({
       pickedChords: updatedChords
     });
+    this.pickChords()
   };
 
   removeChord = index => {
+    console.log(index)
     let updatedChords = [...this.state.pickedChords];
     const usunietyElement = updatedChords.splice(index, 1);
     // updatedChords jest tutaj bez `usunietyElement`
@@ -141,6 +143,7 @@ class App extends Component {
     this.setState({
       pickedChords: updatedChords
     });
+    this.pickChords()
   };
 
   pickChords = () => {
@@ -269,7 +272,7 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <Display strummingPattern={strummingPattern} pickedChords={pickedChords} randomChord={randomChord} nextRandomChord={nextRandomChord} currentBPM={this.currentBPM} onClick={this.removeChord} child={this.child} />
+          <Display strummingPattern={strummingPattern} pickedChords={pickedChords} randomChord={randomChord} nextRandomChord={nextRandomChord} currentBPM={this.currentBPM} onClick={this.removeChord} child={this.child}/>
         </div>
       </div>
     );
