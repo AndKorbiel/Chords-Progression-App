@@ -4,14 +4,12 @@ import Arrows from "./arrow.js";
 class Display extends Component {
 
     removeHandler = (index) => {
-        const x = index
-        console.log('z dzieckoa' + x)
-        this.props.onClick(x)
-    }
+        this.props.onClick(index);
+    };
 
     render() {
 
-        const { pickedChords, strummingPattern, randomChord, nextRandomChord, removeChord, currentBPM, child } = this.props;
+        const { pickedChords, strummingPattern, currentChord, nextChord, currentBPM, child } = this.props;
 
         return(
             <div id="player" className="col-sm-12">
@@ -22,7 +20,7 @@ class Display extends Component {
                                 key={"chord" + index}
                                 onClick={() => this.removeHandler(index)}
                             >
-                                {chord} + {index}
+                                {chord}
                             </li>
                         );
                     })}
@@ -34,9 +32,9 @@ class Display extends Component {
                 />
 
                 <p className="displayed-chord">
-                    {randomChord}
+                    {currentChord}
                     <span className="next-displayed-chord">
-                {nextRandomChord}
+                {nextChord}
               </span>
                 </p>
             </div>

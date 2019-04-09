@@ -36,8 +36,8 @@ const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
 class App extends Component {
   state = {
     pickedChords: [],
-    randomChord: "",
-    nextRandomChord: "",
+    currentChord: "",
+    nextChord: "",
     chordsQuantity: 0,
     bpm: "80",
     strummingPattern: DEFAULT_STRUMMING_PATTERN,
@@ -48,22 +48,6 @@ class App extends Component {
   child = React.createRef();
   currentBPM = 3000;
   interval = null;
-
-  getNumberOfChords = e => {
-    // zmieni nazwę - pobiera tylko wartość z inputa
-    let number = Number(e.target.value);
-    if (number <= 12 && number > 1) {
-      this.setState({
-        chordsQuantity: number,
-        errorMessage: ""
-      });
-    } else {
-      this.setState({
-        chordsQuantity: 0,
-        errorMessage: "Value must be in range 2 - 12"
-      });
-    }
-  };
 
   getBPM = e => {
     let value = e.target.value;
@@ -94,7 +78,7 @@ class App extends Component {
       },
       () => {
         if (this.interval) {
-          this.pickChords();
+          this.setTheDisplay();
         }
       }
     );
@@ -109,19 +93,45 @@ class App extends Component {
     });
   };
 
-  getRandomChords = () => {
-    // zmienić nazwę - losuje akordy na postawie przekazej wartości
-    let pickedRandomChords = [];
+  getNumberOfRandomChords = e => {
+        let number = Number(e.target.value);
+        if (number <= 36 && number > 0) {
+            this.setState({
+                chordsQuantity: number,
+                errorMessage: ""
+            });
+        } else {
+            this.setState({
+                chordsQuantity: null,
+                errorMessage: "Incorrect value"
+            });
+        }
+  };
 
-    for (let i = 0; i < this.state.chordsQuantity; i++) {
-      pickedRandomChords.push(
-        CHORDS[Math.floor(Math.random() * CHORDS.length)]
-      );
+  generateRandomChords = () => {
+
+    if (this.state.chordsQuantity === 0) {
+        this.setState({
+            chordsQuantity: null,
+            errorMessage: "Incorrect value"
+        });
     }
 
-    this.setState({
-      pickedChords: pickedRandomChords
-    });
+    else {
+
+        let pickedRandomChords = [];
+
+        for (let i = 0; i < this.state.chordsQuantity; i++) {
+            pickedRandomChords.push(
+                CHORDS[Math.floor(Math.random() * CHORDS.length)]
+            );
+        }
+
+        this.setState({
+            pickedChords: pickedRandomChords
+        });
+        this.setTheDisplay()
+    }
   };
 
   selectChord = chord => {
@@ -131,22 +141,21 @@ class App extends Component {
     this.setState({
       pickedChords: updatedChords
     });
-    this.pickChords()
+    this.setTheDisplay()
   };
 
   removeChord = index => {
-    console.log(index)
+
     let updatedChords = [...this.state.pickedChords];
     const usunietyElement = updatedChords.splice(index, 1);
-    // updatedChords jest tutaj bez `usunietyElement`
 
     this.setState({
       pickedChords: updatedChords
     });
-    this.pickChords()
+    this.setTheDisplay()
   };
 
-  pickChords = () => {
+  setTheDisplay = () => {
     let i = 0;
     let j = 1;
     if (this.interval != null) {
@@ -155,8 +164,8 @@ class App extends Component {
 
     this.interval = setInterval(() => {
       this.setState({
-        randomChord: this.state.pickedChords[i++],
-        nextRandomChord: this.state.pickedChords[j++]
+        currentChord: this.state.pickedChords[i++],
+        nextChord: this.state.pickedChords[j++]
       });
 
       if (i == this.state.pickedChords.length) {
@@ -168,17 +177,14 @@ class App extends Component {
       this.child.current.arrowHighlight();
     }, this.currentBPM);
 
+    // maybe this could be removed later
     this.setState({
-      started: "Update"
+      started: "Start"
     });
   };
 
   render() {
-    const { pickedChords, strummingPattern, randomChord, nextRandomChord } = this.state;
-
-    // input
-    // this.props.onChange - istienej taki props w inpucie
-    // this.props.onChange(event) - wywola onchange podajac event jaki zaszedl gdy zajdzie
+    const { pickedChords, strummingPattern, currentChord, nextChord } = this.state;
 
     return (
       <div className="App container">
@@ -213,12 +219,12 @@ class App extends Component {
               <div className="col-sm-12 col-md-9">
                 <input
                   type="number"
-                  onChange={this.getNumberOfChords}
+                  onChange={this.getNumberOfRandomChords}
                   value={this.state.chordsQuantity}
                 />
                 <button
                   className="app-button random"
-                  onClick={this.getRandomChords}
+                  onClick={this.generateRandomChords}
                 >
                   Get random chords
                 </button>
@@ -263,16 +269,16 @@ class App extends Component {
             </div>
             <div className="option-row row">
               <div className="col-sm-12 col-md-3">
-                <label>Everything ready?</label>
+
               </div>
               <div className="col-sm-12 col-md-9">
-                <button className="app-button" onClick={this.pickChords}>
+                <button className="app-button" onClick={this.setTheDisplay}>
                   {this.state.started}
                 </button>
               </div>
             </div>
           </div>
-          <Display strummingPattern={strummingPattern} pickedChords={pickedChords} randomChord={randomChord} nextRandomChord={nextRandomChord} currentBPM={this.currentBPM} onClick={this.removeChord} child={this.child}/>
+          <Display strummingPattern={strummingPattern} pickedChords={pickedChords} currentChord={currentChord} nextChord={nextChord} currentBPM={this.currentBPM} onClick={this.removeChord} child={this.child}/>
         </div>
       </div>
     );
