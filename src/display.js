@@ -20,7 +20,7 @@ class Display extends Component {
                                 key={"chord" + index}
                                 onClick={() => this.removeHandler(index)}
                             >
-                                {chord}
+                                {chord} {index}
                             </li>
                         );
                     })}

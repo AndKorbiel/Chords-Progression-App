@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import RadioButton from "./radio-button.js";
 import Display from "./display";
+import SortableComponent from "./sorting";
 
 const CHORDS = [
   "C",
@@ -279,6 +280,7 @@ class App extends Component {
             </div>
           </div>
           <Display strummingPattern={strummingPattern} pickedChords={pickedChords} currentChord={currentChord} nextChord={nextChord} currentBPM={this.currentBPM} onClick={this.removeChord} child={this.child}/>
+          <SortableComponent />
         </div>
       </div>
     );
