@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Arrows from "./arrow.js";
+import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 class Display extends Component {
 
@@ -9,22 +10,25 @@ class Display extends Component {
 
     render() {
 
-        const { pickedChords, strummingPattern, currentChord, nextChord, currentBPM, child } = this.props;
+        const SortableItem = SortableElement(({value}, index) => <li onClick={() => this.removeHandler(index)} >{value}</li>);
+        const SortableList = SortableContainer(({items}) => {
+
+            return (
+                <ul className="chords-table centered">
+                    {items.map((value, index) => (
+                        <SortableItem key={`item-${index}`} index={index} value={value} />
+                    ))}
+                </ul>
+            );
+
+        });
+
+        const { pickedChords, strummingPattern, currentChord, nextChord, currentBPM, child,onSortEnd } = this.props;
 
         return(
             <div id="player" className="col-sm-12">
-                <ul className="chords-table centered">
-                    {pickedChords.map((chord, index) => {
-                        return (
-                            <li
-                                key={"chord" + index}
-                                onClick={() => this.removeHandler(index)}
-                            >
-                                {chord} {index}
-                            </li>
-                        );
-                    })}
-                </ul>
+                <SortableList items={pickedChords} onSortEnd={onSortEnd} axis={'x'} pressDelay={200} helperClass="sortableClass" />
+
                 <Arrows
                     BPM={currentBPM}
                     strummingPattern={strummingPattern}
@@ -32,15 +36,15 @@ class Display extends Component {
                 />
 
                 <p className="displayed-chord">
-                    {currentChord}
+                        {currentChord}
                     <span className="next-displayed-chord">
-                {nextChord}
-              </span>
+                        {nextChord}
+                    </span>
                 </p>
+
             </div>
         )
     }
 }
 
 export default Display;
-

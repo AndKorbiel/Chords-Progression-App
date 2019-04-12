@@ -106,6 +106,20 @@ body {
   animation: pulse 2s infinite;
 }
 
+.sortableClass{
+    padding: 10px;
+    border: 1px solid #e6e6e6;
+    background: white;
+    margin-right: 10px;
+    font-size: 18px;
+    border-radius: 3px;
+    min-width: 50px;
+    margin-bottom: 10px;
+    text-align: center;
+    list-style: none;
+    opacity: 0.5;
+}
+
 @keyframes pulse {
   0% {
     opacity: 0
@@ -118,10 +132,4 @@ body {
   100% {
     opacity: 0;
   } 
-}
-
-.soo li {
-  display: block;
-  float: left;
-  width: 150px;
 }

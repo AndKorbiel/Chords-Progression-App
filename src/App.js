@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import RadioButton from "./radio-button.js";
 import Display from "./display";
-import SortableComponent from "./sorting";
+import arrayMove from 'array-move';
 
 const CHORDS = [
   "C",
@@ -43,14 +43,21 @@ class App extends Component {
     bpm: "80",
     strummingPattern: DEFAULT_STRUMMING_PATTERN,
     errorMessage: "",
-    started: "Start"
+    started: "Start",
   };
 
   child = React.createRef();
   currentBPM = 3000;
   interval = null;
 
-  getBPM = e => {
+    onSortEnd = ({oldIndex, newIndex}) => {
+        this.setState(({pickedChords}) => ({
+            pickedChords: arrayMove(pickedChords, oldIndex, newIndex),
+        }));
+
+    };
+
+    getBPM = e => {
     let value = e.target.value;
 
     switch (value) {
@@ -279,8 +286,8 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <Display strummingPattern={strummingPattern} pickedChords={pickedChords} currentChord={currentChord} nextChord={nextChord} currentBPM={this.currentBPM} onClick={this.removeChord} child={this.child}/>
-          <SortableComponent />
+          <Display strummingPattern={strummingPattern} pickedChords={pickedChords} currentChord={currentChord} nextChord={nextChord} currentBPM={this.currentBPM} onClick={this.removeChord} child={this.child} items={this.state.pickedChords} onSortEnd={this.onSortEnd} axis={'x'} />
+
         </div>
       </div>
     );
