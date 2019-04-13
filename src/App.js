@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import "./App.css";
 import RadioButton from "./radio-button.js";
 import Display from "./display";
-import arrayMove from 'array-move';
+import arrayMove from "array-move";
 
+const SPACE_CHORD = "X";
 const CHORDS = [
   "C",
   "D",
@@ -19,7 +20,8 @@ const CHORDS = [
   "Am",
   "A7",
   "B",
-  "Bm"
+  "Bm",
+  SPACE_CHORD
 ];
 
 const DEFAULT_STRUMMING_PATTERN = [
@@ -43,21 +45,20 @@ class App extends Component {
     bpm: "80",
     strummingPattern: DEFAULT_STRUMMING_PATTERN,
     errorMessage: "",
-    started: "Start",
+    started: "Start"
   };
 
   child = React.createRef();
   currentBPM = 3000;
   interval = null;
 
-    onSortEnd = ({oldIndex, newIndex}) => {
-        this.setState(({pickedChords}) => ({
-            pickedChords: arrayMove(pickedChords, oldIndex, newIndex),
-        }));
+  onSortEnd = ({ oldIndex, newIndex }) => {
+    this.setState(({ pickedChords }) => ({
+      pickedChords: arrayMove(pickedChords, oldIndex, newIndex)
+    }));
+  };
 
-    };
-
-    getBPM = e => {
+  getBPM = e => {
     let value = e.target.value;
 
     switch (value) {
@@ -102,43 +103,39 @@ class App extends Component {
   };
 
   getNumberOfRandomChords = e => {
-        let number = Number(e.target.value);
-        if (number <= 36 && number > 0) {
-            this.setState({
-                chordsQuantity: number,
-                errorMessage: ""
-            });
-        } else {
-            this.setState({
-                chordsQuantity: null,
-                errorMessage: "Incorrect value"
-            });
-        }
+    let number = Number(e.target.value);
+    if (number <= 36 && number > 0) {
+      this.setState({
+        chordsQuantity: number,
+        errorMessage: ""
+      });
+    } else {
+      this.setState({
+        chordsQuantity: null,
+        errorMessage: "Incorrect value"
+      });
+    }
   };
 
   generateRandomChords = () => {
-
     if (this.state.chordsQuantity === 0) {
-        this.setState({
-            chordsQuantity: null,
-            errorMessage: "Incorrect value"
-        });
-    }
+      this.setState({
+        chordsQuantity: null,
+        errorMessage: "Incorrect value"
+      });
+    } else {
+      let pickedRandomChords = [];
 
-    else {
+      for (let i = 0; i < this.state.chordsQuantity; i++) {
+        pickedRandomChords.push(
+          CHORDS[Math.floor(Math.random() * CHORDS.length)]
+        );
+      }
 
-        let pickedRandomChords = [];
-
-        for (let i = 0; i < this.state.chordsQuantity; i++) {
-            pickedRandomChords.push(
-                CHORDS[Math.floor(Math.random() * CHORDS.length)]
-            );
-        }
-
-        this.setState({
-            pickedChords: pickedRandomChords
-        });
-        this.setTheDisplay()
+      this.setState({
+        pickedChords: pickedRandomChords
+      });
+      this.setTheDisplay();
     }
   };
 
@@ -149,18 +146,17 @@ class App extends Component {
     this.setState({
       pickedChords: updatedChords
     });
-    this.setTheDisplay()
+    this.setTheDisplay();
   };
 
   removeChord = index => {
-
     let updatedChords = [...this.state.pickedChords];
     const usunietyElement = updatedChords.splice(index, 1);
 
     this.setState({
       pickedChords: updatedChords
     });
-    this.setTheDisplay()
+    this.setTheDisplay();
   };
 
   setTheDisplay = () => {
@@ -170,15 +166,19 @@ class App extends Component {
       clearInterval(this.interval);
     }
 
+    let pickedChordsWithoutSpace = this.state.pickedChords.filter(
+      chord => chord != SPACE_CHORD
+    );
+
     this.interval = setInterval(() => {
       this.setState({
-        currentChord: this.state.pickedChords[i++],
-        nextChord: this.state.pickedChords[j++]
+        currentChord: pickedChordsWithoutSpace[i++],
+        nextChord: pickedChordsWithoutSpace[j++]
       });
 
-      if (i == this.state.pickedChords.length) {
+      if (i == pickedChordsWithoutSpace.length) {
         i = 0;
-      } else if (j == this.state.pickedChords.length) {
+      } else if (j == pickedChordsWithoutSpace.length) {
         j = 0;
       }
 
@@ -192,7 +192,12 @@ class App extends Component {
   };
 
   render() {
-    const { pickedChords, strummingPattern, currentChord, nextChord } = this.state;
+    const {
+      pickedChords,
+      strummingPattern,
+      currentChord,
+      nextChord
+    } = this.state;
 
     return (
       <div className="App container">
@@ -276,9 +281,7 @@ class App extends Component {
               </div>
             </div>
             <div className="option-row row">
-              <div className="col-sm-12 col-md-3">
-
-              </div>
+              <div className="col-sm-12 col-md-3" />
               <div className="col-sm-12 col-md-9">
                 <button className="app-button" onClick={this.setTheDisplay}>
                   {this.state.started}
@@ -286,8 +289,18 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <Display strummingPattern={strummingPattern} pickedChords={pickedChords} currentChord={currentChord} nextChord={nextChord} currentBPM={this.currentBPM} onClick={this.removeChord} child={this.child} items={this.state.pickedChords} onSortEnd={this.onSortEnd} axis={'x'} />
-
+          <Display
+            strummingPattern={strummingPattern}
+            pickedChords={pickedChords}
+            currentChord={currentChord}
+            nextChord={nextChord}
+            currentBPM={this.currentBPM}
+            onClick={this.removeChord}
+            child={this.child}
+            items={this.state.pickedChords}
+            onSortEnd={this.onSortEnd}
+            axis={"x"}
+          />
         </div>
       </div>
     );
