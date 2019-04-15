@@ -4,7 +4,7 @@ import RadioButton from "./radio-button.js";
 import Display from "./display";
 import arrayMove from "array-move";
 
-const SPACE_CHORD = "X";
+const SPACE_CHORD = "Line Break";
 const CHORDS = [
   "C",
   "D",

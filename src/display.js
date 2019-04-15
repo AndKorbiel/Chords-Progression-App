@@ -4,9 +4,10 @@ import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 class Display extends Component {
   SortableItem = SortableElement(({ value, index }) => (
-    <li onClick={() => this.removeHandler(index)}>{value}</li>
+    <li onClick={() => this.removeHandler(index)} className={value === 'Line Break' ? "lineBreak" : null}>{value}</li>
   ));
   SortableList = SortableContainer(({ items }) => {
+
     return (
       <ul className="chords-table centered">
         {items.map((value, index) => (
@@ -40,7 +41,6 @@ class Display extends Component {
         <this.SortableList
           items={pickedChords}
           onSortEnd={onSortEnd}
-          axis={"x"}
           pressDelay={200}
           helperClass="sortableClass"
         />
