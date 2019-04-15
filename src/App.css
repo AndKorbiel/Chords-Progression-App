@@ -15,6 +15,7 @@ body {
   padding-left: 0;
   flex-wrap: wrap;
   justify-content: flex-start;
+    margin-bottom: 0;
 }
 
 .chords-table.centered {
@@ -106,6 +107,20 @@ body {
   animation: pulse 2s infinite;
 }
 
+@keyframes pulse {
+    0% {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
 .sortableClass{
     padding: 10px;
     border: 1px solid #e6e6e6;
@@ -128,16 +143,71 @@ body {
     border: 1px solid #e6e6e6;
 }
 
-@keyframes pulse {
-  0% {
-    opacity: 0
-  }
+.chords-table li.lineBreak:hover {
+    border: 1px solid red;
+}
 
-  50% {
-    opacity: 1;
-  }
+.chords-table li.lineBreakList {
+    background: #f1f1f1;
+    opacity: 0.6;
+}
 
-  100% {
-    opacity: 0;
-  } 
+.radioSpan {
+    white-space: nowrap;
+    float: left;
+}
+
+@media only screen and (max-width: 1200px) {
+    .radio-option {
+        margin-bottom: 25px;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .option-row input[type="number"] {
+        width: 50%;
+    }
+
+    .option-row label {
+        font-size: 18px;
+        text-align: center;
+        display: block;
+        margin-bottom: 1em;
+    }
+
+    .radio-title {
+        font-weight: bold;
+    }
+
+    .option-row {
+        padding: 15px 15px 30px 15px;
+        border-bottom: 1px solid #dadada;
+    }
+
+    .app-button {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .chords-table {
+        -webkit-justify-content: center;
+        justify-content: center;
+    }
+
+    #player .arrow-cont {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    #player .arrow {
+        font-size: 50px;
+    }
+
+}
+
+@media only screen and (max-width: 549px) {
+    .app-button.random, .option-row input[type="number"] {
+        width: 100%;
+    }
 }

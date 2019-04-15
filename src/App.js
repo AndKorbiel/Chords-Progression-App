@@ -214,7 +214,7 @@ class App extends Component {
                     return (
                       <li
                         key={chord}
-                        className={this.state.isSelected}
+                        className={chord === 'Line Break' ? "lineBreakList" : null}
                         onClick={() => this.selectChord(chord)}
                       >
                         {chord}
@@ -251,6 +251,7 @@ class App extends Component {
                 {BPM_OPTIONS.map(option => {
                   return (
                     <React.Fragment key={`bmp_${option}`}>
+                      <div className="radioSpan">
                       <input
                         type="radio"
                         name="bpm"
@@ -258,6 +259,7 @@ class App extends Component {
                         checked={option == this.state.bpm}
                       />
                       <span className="radio-val"> {option}</span>
+                      </div>
                     </React.Fragment>
                   );
                 })}
