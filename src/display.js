@@ -7,7 +7,6 @@ class Display extends Component {
     <li onClick={() => this.removeHandler(index)} className={value === 'Line Break' ? "lineBreak" : null}>{value}</li>
   ));
   SortableList = SortableContainer(({ items }) => {
-
     return (
       <ul className="chords-table centered">
         {items.map((value, index) => (
@@ -15,6 +14,7 @@ class Display extends Component {
             key={`item-${index}`}
             index={index}
             value={value}
+            disabled={value === 'Line Break' ? true : false}
           />
         ))}
       </ul>
@@ -42,7 +42,9 @@ class Display extends Component {
           items={pickedChords}
           onSortEnd={onSortEnd}
           pressDelay={200}
+          axis={'xy'}
           helperClass="sortableClass"
+          disableAutoscroll={true}
         />
 
         <Arrows

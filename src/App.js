@@ -45,7 +45,8 @@ class App extends Component {
     bpm: "80",
     strummingPattern: DEFAULT_STRUMMING_PATTERN,
     errorMessage: "",
-    started: "Start"
+    started: "Start",
+    menuIsVisible: true
   };
 
   child = React.createRef();
@@ -191,6 +192,16 @@ class App extends Component {
     });
   };
 
+  hideMenu = () => {
+
+    let menuState = this.state.menuIsVisible === true ? false : true;
+    console.log(menuState)
+
+    this.setState({
+        menuIsVisible: menuState
+    })
+  };
+
   render() {
     const {
       pickedChords,
@@ -202,9 +213,11 @@ class App extends Component {
     return (
       <div className="App container">
         <div className="row">
-          <div className="col-sm-12" />
-          <div className="col-sm-12 app-options">
+          <div className={(this.state.menuIsVisible === true ? "isVisible" : "isNotVisible")  + " col-sm-12 app-options"}>
             <div className="option-row row">
+              <div className="col-sm-12">
+                  <h2 className="section-title">Options</h2>
+              </div>
               <div className="col-sm-12 col-md-3">
                 <label>Pick Your own chords</label>
               </div>
@@ -290,6 +303,7 @@ class App extends Component {
                 </button>
               </div>
             </div>
+              <i className={(this.state.menuIsVisible === true ? "fas fa-chevron-up slideUpButton" : "fas fa-chevron-down slideUpButton")} onClick={this.hideMenu}></i>
           </div>
           <Display
             strummingPattern={strummingPattern}
