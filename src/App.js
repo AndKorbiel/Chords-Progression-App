@@ -56,7 +56,10 @@ class App extends Component {
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.setState(({ pickedChords }) => ({
       pickedChords: arrayMove(pickedChords, oldIndex, newIndex)
-    }));
+
+    },
+            () => { this.setTheDisplay() }
+    ))
   };
 
   getBPM = e => {
@@ -135,19 +138,22 @@ class App extends Component {
 
       this.setState({
         pickedChords: pickedRandomChords
-      });
-      this.setTheDisplay();
-    }
+      },
+          () => { this.setTheDisplay() }
+      );
+      }
   };
 
   selectChord = chord => {
     let updatedChords = [...this.state.pickedChords];
     updatedChords.push(chord);
+      console.log(updatedChords)
 
     this.setState({
       pickedChords: updatedChords
-    });
-    this.setTheDisplay();
+    },
+        () => { this.setTheDisplay() }
+    );
   };
 
   removeChord = index => {
@@ -156,8 +162,9 @@ class App extends Component {
 
     this.setState({
       pickedChords: updatedChords
-    });
-    this.setTheDisplay();
+    },
+        () => { this.setTheDisplay() }
+    );
   };
 
   setTheDisplay = () => {
@@ -165,7 +172,7 @@ class App extends Component {
     let j = 1;
     if (this.interval != null) {
       clearInterval(this.interval);
-    }
+    };
 
     let pickedChordsWithoutSpace = this.state.pickedChords.filter(
       chord => chord != SPACE_CHORD
@@ -188,7 +195,7 @@ class App extends Component {
 
     // maybe this could be removed later
     this.setState({
-      started: "Start"
+      started: "Restart"
     });
   };
 
