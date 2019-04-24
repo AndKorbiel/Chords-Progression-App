@@ -36,6 +36,9 @@ const DEFAULT_STRUMMING_PATTERN = [
 ];
 const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
 
+const kick = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Kicks/15[kb]808bd2.aif.mp3');
+const hat = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Hats/39[kb]707-ohh.aif.mp3');
+
 class App extends Component {
   state = {
     pickedChords: [],
@@ -183,20 +186,36 @@ class App extends Component {
         currentChord: pickedChordsWithoutSpace[i++],
         nextChord: pickedChordsWithoutSpace[j++]
       });
+      this.audioPlay();
 
       if (i == pickedChordsWithoutSpace.length) {
         i = 0;
       } else if (j == pickedChordsWithoutSpace.length) {
         j = 0;
       }
-
       this.child.current.arrowHighlight();
+
     }, this.currentBPM);
 
     // maybe this could be removed later
     this.setState({
       started: "Restart"
     });
+  };
+
+  audioPlay = () => {
+        if (this.interval != null) {
+            clearInterval(this.interval)
+        }
+
+        this.interval = setInterval( () => {
+                kick.play();
+                setTimeout(() => {
+                        hat.play()
+                    }, this.currentBPM / 8
+                );
+            }, this.currentBPM / 4
+        );
   };
 
   hideMenu = () => {
@@ -224,6 +243,7 @@ class App extends Component {
             <div className="option-row row">
               <div className="col-sm-12">
                   <h2 className="section-title">Options</h2>
+                  <button onClick={this.audioPlay}>Click</button>
               </div>
               <div className="col-sm-12 col-md-3">
                 <label>Pick Your own chords</label>

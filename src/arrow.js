@@ -44,14 +44,11 @@ class arrows extends Component {
         () => setTimeout(highlight, this.props.BPM / 8)
       );
     };
-
     highlight();
   };
 
   getSpeed = () => {
     let speed = "one";
-
-    console.log(this.props.BPM)
 
     if (this.props.BPM == 1500) {
       speed = "one";
