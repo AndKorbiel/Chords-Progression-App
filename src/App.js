@@ -49,12 +49,19 @@ class App extends Component {
     strummingPattern: DEFAULT_STRUMMING_PATTERN,
     errorMessage: "",
     started: "Start",
-    menuIsVisible: true
+    menuIsVisible: true,
+    isLoading: true
   };
 
   child = React.createRef();
   currentBPM = 3000;
   interval = null;
+
+  componentDidMount() {
+    setTimeout(()=> {
+        this.setState({isLoading: false})
+    }, 1000)
+  }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.setState(({ pickedChords }) => ({
@@ -237,13 +244,13 @@ class App extends Component {
     } = this.state;
 
     return (
-      <div className="App container">
+
+      <div className={ this.state.isLoading ? "hidden" : "visible" + " App container"}>
         <div className="row">
           <div className={(this.state.menuIsVisible === true ? "isVisible" : "isNotVisible")  + " col-sm-12 app-options"}>
             <div className="option-row row">
               <div className="col-sm-12">
                   <h2 className="section-title">Options</h2>
-                  <button onClick={this.audioPlay}>Click</button>
               </div>
               <div className="col-sm-12 col-md-3">
                 <label>Pick Your own chords</label>
