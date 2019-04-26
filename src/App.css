@@ -4,6 +4,7 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: #c5c5c5;
+    overflow-x: hidden;
 }
 
 .App {

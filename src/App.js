@@ -36,8 +36,8 @@ const DEFAULT_STRUMMING_PATTERN = [
 ];
 const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
 
-const kick = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Kicks/15[kb]808bd2.aif.mp3');
-const hat = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Hats/39[kb]707-ohh.aif.mp3');
+const kick = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Kicks/14[kb]analogbd.aif.mp3');
+const hat = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Hats/16[kb]ec-hat081.wav.mp3');
 
 class App extends Component {
   state = {
@@ -67,8 +67,7 @@ class App extends Component {
     this.setState(({ pickedChords }) => ({
       pickedChords: arrayMove(pickedChords, oldIndex, newIndex)
 
-    },
-            () => { this.setTheDisplay() }
+    }
     ))
   };
 
@@ -193,7 +192,6 @@ class App extends Component {
         currentChord: pickedChordsWithoutSpace[i++],
         nextChord: pickedChordsWithoutSpace[j++]
       });
-      this.audioPlay();
 
       if (i == pickedChordsWithoutSpace.length) {
         i = 0;
@@ -204,6 +202,8 @@ class App extends Component {
 
     }, this.currentBPM);
 
+    this.audioPlay()
+
     // maybe this could be removed later
     this.setState({
       started: "Restart"
@@ -211,14 +211,16 @@ class App extends Component {
   };
 
   audioPlay = () => {
-        if (this.interval != null) {
-            clearInterval(this.interval)
+        if (this.intervalAnother != null) {
+            clearInterval(this.intervalAnother)
         }
 
-        this.interval = setInterval( () => {
+        this.intervalAnother = setInterval( () => {
                 kick.play();
+                kick.volume = 0.2;
                 setTimeout(() => {
-                        hat.play()
+                        hat.play();
+                        hat.volume = 0.5;
                     }, this.currentBPM / 8
                 );
             }, this.currentBPM / 4

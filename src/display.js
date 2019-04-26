@@ -14,8 +14,6 @@ class Display extends Component {
             key={`item-${index}`}
             index={index}
             value={value}
-            axis="x"
-            disabled={value === 'Line Break' ? true : false}
           />
         ))}
       </ul>
@@ -43,7 +41,7 @@ class Display extends Component {
           items={pickedChords}
           onSortEnd={onSortEnd}
           pressDelay={200}
-          axis="x"
+          axis={'xy'}
           helperClass="sortableClass"
           disableAutoscroll={true}
         />
