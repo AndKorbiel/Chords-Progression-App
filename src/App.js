@@ -36,8 +36,12 @@ const DEFAULT_STRUMMING_PATTERN = [
 ];
 const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
 
-const kick = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Kicks/14[kb]analogbd.aif.mp3');
-const hat = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Hats/16[kb]ec-hat081.wav.mp3');
+const kick = new Audio(
+  "https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Kicks/14[kb]analogbd.aif.mp3"
+);
+const hat = new Audio(
+  "https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Hats/16[kb]ec-hat081.wav.mp3"
+);
 
 class App extends Component {
   state = {
@@ -58,17 +62,15 @@ class App extends Component {
   interval = null;
 
   componentDidMount() {
-    setTimeout(()=> {
-        this.setState({isLoading: false})
-    }, 1000)
+    setTimeout(() => {
+      this.setState({ isLoading: false });
+    }, 1000);
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.setState(({ pickedChords }) => ({
       pickedChords: arrayMove(pickedChords, oldIndex, newIndex)
-
-    }
-    ))
+    }));
   };
 
   getBPM = e => {
@@ -145,23 +147,29 @@ class App extends Component {
         );
       }
 
-      this.setState({
-        pickedChords: pickedRandomChords
-      },
-          () => { this.setTheDisplay() }
+      this.setState(
+        {
+          pickedChords: pickedRandomChords
+        },
+        () => {
+          this.setTheDisplay();
+        }
       );
-      }
+    }
   };
 
   selectChord = chord => {
     let updatedChords = [...this.state.pickedChords];
     updatedChords.push(chord);
-      console.log(updatedChords)
+    console.log(updatedChords);
 
-    this.setState({
-      pickedChords: updatedChords
-    },
-        () => { this.setTheDisplay() }
+    this.setState(
+      {
+        pickedChords: updatedChords
+      },
+      () => {
+        this.setTheDisplay();
+      }
     );
   };
 
@@ -169,40 +177,47 @@ class App extends Component {
     let updatedChords = [...this.state.pickedChords];
     const usunietyElement = updatedChords.splice(index, 1);
 
-    this.setState({
-      pickedChords: updatedChords
-    },
-        () => { this.setTheDisplay() }
+    this.setState(
+      {
+        pickedChords: updatedChords
+      },
+      () => {
+        this.setTheDisplay();
+      }
     );
   };
 
-  setTheDisplay = () => {
+  onChordFinish = () => {
     let i = 0;
     let j = 1;
-    if (this.interval != null) {
-      clearInterval(this.interval);
-    };
 
     let pickedChordsWithoutSpace = this.state.pickedChords.filter(
       chord => chord != SPACE_CHORD
     );
 
-    this.interval = setInterval(() => {
+    return () => {
       this.setState({
         currentChord: pickedChordsWithoutSpace[i++],
         nextChord: pickedChordsWithoutSpace[j++]
       });
-
-      if (i == pickedChordsWithoutSpace.length) {
+      if (i >= pickedChordsWithoutSpace.length) {
         i = 0;
-      } else if (j == pickedChordsWithoutSpace.length) {
+      }
+      if (j >= pickedChordsWithoutSpace.length) {
         j = 0;
       }
-      this.child.current.arrowHighlight();
+    };
+  };
 
-    }, this.currentBPM);
+  setTheDisplay = () => {
+    if (this.interval != null) {
+      clearInterval(this.interval);
+    }
+    const onFinish = this.onChordFinish();
+    onFinish();
+    this.child.current.arrowHighlight(onFinish);
 
-    this.audioPlay()
+    // this.audioPlay();
 
     // maybe this could be removed later
     this.setState({
@@ -211,30 +226,26 @@ class App extends Component {
   };
 
   audioPlay = () => {
-        if (this.intervalAnother != null) {
-            clearInterval(this.intervalAnother)
-        }
+    if (this.intervalAnother != null) {
+      clearInterval(this.intervalAnother);
+    }
 
-        this.intervalAnother = setInterval( () => {
-                kick.play();
-                kick.volume = 0.2;
-                setTimeout(() => {
-                        hat.play();
-                        hat.volume = 0.5;
-                    }, this.currentBPM / 8
-                );
-            }, this.currentBPM / 4
-        );
+    this.intervalAnother = setInterval(() => {
+      kick.play();
+      kick.volume = 0.2;
+      setTimeout(() => {
+        hat.play();
+        hat.volume = 0.5;
+      }, this.currentBPM / 8);
+    }, this.currentBPM / 4);
   };
 
   hideMenu = () => {
-
-    let menuState = this.state.menuIsVisible === true ? false : true;
-    console.log(menuState)
+    let menuState = !this.state.menuIsVisible;
 
     this.setState({
-        menuIsVisible: menuState
-    })
+      menuIsVisible: menuState
+    });
   };
 
   render() {
@@ -246,13 +257,22 @@ class App extends Component {
     } = this.state;
 
     return (
-
-      <div className={ this.state.isLoading ? "hidden" : "visible" + " App container"}>
+      <div
+        className={
+          this.state.isLoading ? "hidden" : "visible" + " App container"
+        }
+      >
         <div className="row">
-          <div className={(this.state.menuIsVisible === true ? "isVisible" : "isNotVisible")  + " col-sm-12 app-options"}>
+          <div
+            className={
+              (this.state.menuIsVisible === true
+                ? "isVisible"
+                : "isNotVisible") + " col-sm-12 app-options"
+            }
+          >
             <div className="option-row row">
               <div className="col-sm-12">
-                  <h2 className="section-title">Options</h2>
+                <h2 className="section-title">Options</h2>
               </div>
               <div className="col-sm-12 col-md-3">
                 <label>Pick Your own chords</label>
@@ -263,7 +283,9 @@ class App extends Component {
                     return (
                       <li
                         key={chord}
-                        className={chord === 'Line Break' ? "lineBreakList" : null}
+                        className={
+                          chord === "Line Break" ? "lineBreakList" : null
+                        }
                         onClick={() => this.selectChord(chord)}
                       >
                         {chord}
@@ -301,13 +323,13 @@ class App extends Component {
                   return (
                     <React.Fragment key={`bmp_${option}`}>
                       <div className="radioSpan">
-                      <input
-                        type="radio"
-                        name="bpm"
-                        value={option}
-                        checked={option == this.state.bpm}
-                      />
-                      <span className="radio-val"> {option}</span>
+                        <input
+                          type="radio"
+                          name="bpm"
+                          value={option}
+                          checked={option == this.state.bpm}
+                        />
+                        <span className="radio-val"> {option}</span>
                       </div>
                     </React.Fragment>
                   );
@@ -339,7 +361,14 @@ class App extends Component {
                 </button>
               </div>
             </div>
-              <i className={(this.state.menuIsVisible === true ? "fas fa-chevron-up slideUpButton" : "fas fa-chevron-down slideUpButton")} onClick={this.hideMenu}></i>
+            <i
+              className={
+                this.state.menuIsVisible === true
+                  ? "fas fa-chevron-up slideUpButton"
+                  : "fas fa-chevron-down slideUpButton"
+              }
+              onClick={this.hideMenu}
+            />
           </div>
           <Display
             strummingPattern={strummingPattern}

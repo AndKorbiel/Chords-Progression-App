@@ -12,39 +12,65 @@ const arrowS = [
   "arrow8"
 ];
 
+const kick = new Audio(
+  "https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Kicks/14[kb]analogbd.aif.mp3"
+);
+const hat = new Audio(
+  "https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Hats/16[kb]ec-hat081.wav.mp3"
+);
+
 class arrows extends Component {
   state = {
     arrowsState: arrowS.map(() => ({ isHighlighted: false, speed: "one" }))
   };
+  sounds = [kick, hat];
 
-  arrowHighlight = () => {
+  getNewArrowsState = (i, speed) => {
+    const newArrowsStateCopy = [...this.state.arrowsState];
 
-    let i = 0;
-    let speed = this.getSpeed();
+    if (i === arrowS.length) {
+      newArrowsStateCopy[i] = { isHighlighted: false, speed };
+      i = 0;
+    } else if (i > 0) {
+      newArrowsStateCopy[i - 1] = { isHighlighted: false, speed };
+      newArrowsStateCopy[i] = { isHighlighted: true, speed };
+      i++;
+    } else {
+      newArrowsStateCopy[i] = { isHighlighted: true, speed };
+      i++;
+    }
+    return [i, newArrowsStateCopy];
+  };
 
-    let highlight = () => {
-      const newArrowsStateCopy = [...this.state.arrowsState];
-      if (i > 0) {
-        newArrowsStateCopy[i - 1] = { isHighlighted: false, speed };
-        newArrowsStateCopy[i] = { isHighlighted: true, speed };
-        i++;
-      } else if (i === arrowS.length) {
-        newArrowsStateCopy[i] = { isHighlighted: false, speed };
-        i = 0;
-        highlight();
-      } else {
-        newArrowsStateCopy[i] = { isHighlighted: true, speed };
-        i++;
-      }
+  playNextSound = () => {
+    this.sounds[0].play();
+    this.sounds.reverse();
+  };
 
+  highlight = (i, speed, onFinish) => {
+    this.playNextSound();
+    const [newI, newState] = this.getNewArrowsState(i, speed);
+
+    if (newI === 0) {
+      onFinish();
+    } else {
       this.setState(
         {
-          arrowsState: newArrowsStateCopy
+          arrowsState: newState
         },
-        () => setTimeout(highlight, this.props.BPM / 8)
+        () =>
+          setTimeout(
+            () => this.highlight(newI, speed, onFinish),
+            this.props.BPM / 8
+          )
       );
-    };
-    highlight();
+    }
+  };
+
+  arrowHighlight = onFinish => {
+    let speed = this.getSpeed();
+
+    this.highlight(0, speed, onFinish);
   };
 
   getSpeed = () => {
