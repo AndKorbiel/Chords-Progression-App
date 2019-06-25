@@ -7,18 +7,27 @@ import arrayMove from "array-move";
 const SPACE_CHORD = "Line Break";
 const CHORDS = [
   "C",
+  "Cm",
+  "C#",
+  "C#m",
   "D",
   "Dm",
+  "D#",
+  "D#m",
   "E",
   "Em",
-  "E7",
   "F",
   "Fm",
+  "F#",
+  "F#m",
   "G",
-  "G7",
+  "Gm",
+  "G#",
+  "G#m",
   "A",
   "Am",
-  "A7",
+  "A#",
+  "A#m",
   "B",
   "Bm",
   SPACE_CHORD
@@ -50,7 +59,8 @@ class App extends Component {
     errorMessage: "",
     started: "Start",
     menuIsVisible: true,
-    isLoading: true
+    isLoading: true,
+    isWorking: false
   };
 
   child = React.createRef();
@@ -66,7 +76,6 @@ class App extends Component {
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.setState(({ pickedChords }) => ({
       pickedChords: arrayMove(pickedChords, oldIndex, newIndex)
-
     }
     ))
   };
@@ -97,11 +106,6 @@ class App extends Component {
     this.setState(
       {
         bpm: value
-      },
-      () => {
-        if (this.interval) {
-          this.setTheDisplay();
-        }
       }
     );
   };
@@ -147,22 +151,17 @@ class App extends Component {
 
       this.setState({
         pickedChords: pickedRandomChords
-      },
-          () => { this.setTheDisplay() }
-      );
+      });
       }
   };
 
   selectChord = chord => {
     let updatedChords = [...this.state.pickedChords];
     updatedChords.push(chord);
-      console.log(updatedChords)
 
     this.setState({
       pickedChords: updatedChords
-    },
-        () => { this.setTheDisplay() }
-    );
+    });
   };
 
   removeChord = index => {
@@ -171,13 +170,15 @@ class App extends Component {
 
     this.setState({
       pickedChords: updatedChords
-    },
-        () => { this.setTheDisplay() }
-    );
+    });
   };
 
   setTheDisplay = () => {
-    let i = 0;
+    this.setState({
+      isWorking: true
+    })
+
+      let i = 0;
     let j = 1;
     if (this.interval != null) {
       clearInterval(this.interval);
@@ -188,27 +189,35 @@ class App extends Component {
     );
 
     this.interval = setInterval(() => {
-      this.setState({
-        currentChord: pickedChordsWithoutSpace[i++],
-        nextChord: pickedChordsWithoutSpace[j++]
-      });
-
-      if (i == pickedChordsWithoutSpace.length) {
-        i = 0;
-      } else if (j == pickedChordsWithoutSpace.length) {
-        j = 0;
+      if (this.state.isWorking) {
+        this.setState({
+          currentChord: pickedChordsWithoutSpace[i++],
+          nextChord: pickedChordsWithoutSpace[j++]
+        });
+  
+        if (i == pickedChordsWithoutSpace.length) {
+          i = 0;
+        } else if (j == pickedChordsWithoutSpace.length) {
+          j = 0;
+        }
+        this.child.current.arrowHighlight();
       }
-      this.child.current.arrowHighlight();
+      
 
     }, this.currentBPM);
 
-    this.audioPlay()
+    setTimeout(this.audioPlay, this.currentBPM);
 
-    // maybe this could be removed later
     this.setState({
       started: "Restart"
     });
   };
+
+  stopTheDisplay = () => {
+    this.setState({
+      isWorking: false
+    })
+  }
 
   audioPlay = () => {
         if (this.intervalAnother != null) {
@@ -216,13 +225,15 @@ class App extends Component {
         }
 
         this.intervalAnother = setInterval( () => {
-                kick.play();
+          if(this.state.isWorking) {
+            kick.play();
                 kick.volume = 0.2;
                 setTimeout(() => {
                         hat.play();
                         hat.volume = 0.5;
                     }, this.currentBPM / 8
                 );
+          }
             }, this.currentBPM / 4
         );
   };
@@ -336,6 +347,9 @@ class App extends Component {
               <div className="col-sm-12 col-md-9">
                 <button className="app-button" onClick={this.setTheDisplay}>
                   {this.state.started}
+                </button>
+                <button className="app-button stop" onClick={this.stopTheDisplay}>
+                  Stop
                 </button>
               </div>
             </div>

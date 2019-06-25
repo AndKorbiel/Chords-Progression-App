@@ -34,7 +34,11 @@ body {
   padding-left: 0;
   flex-wrap: wrap;
   justify-content: flex-start;
-    margin-bottom: 0;
+  margin-bottom: 0;  
+}
+
+.app-options .chords-table {
+    max-width: 90%;
 }
 
 .chords-table.centered {
@@ -78,6 +82,11 @@ body {
   color: white;
   font-size: 18px;
   text-transform: uppercase;
+}
+
+.app-button.stop {
+    background: #424242;
+    margin-left: 10px;
 }
 
 .app-options {
@@ -261,9 +270,10 @@ body {
         margin-top: 15px;
     }
 
-    .chords-table {
+    .chords-table, .app-options .chords-table {
         -webkit-justify-content: center;
         justify-content: center;
+        max-width: 100%;
     }
 
     #player .arrow-cont {
@@ -275,6 +285,10 @@ body {
     #player .arrow {
         font-size: 50px;
         width: 19%;
+    }
+
+    .app-button.stop {
+        margin-left: 0;
     }
 
     .isVisible {
