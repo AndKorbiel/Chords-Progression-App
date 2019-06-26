@@ -77,16 +77,20 @@ body {
 
 .app-button {
   border: none;
-  padding: 10px 30px;
-  background: rgb(186, 199, 1);
+  padding: 10px 30px; 
+  background: #424242;
+  transition: 0.5s;
   color: white;
   font-size: 18px;
   text-transform: uppercase;
 }
 
 .app-button.stop {
-    background: #424242;
     margin-left: 10px;
+}
+
+.app-button.active {
+    background: rgb(186, 199, 1);
 }
 
 .app-options {
@@ -137,6 +141,21 @@ body {
 
 .option-row .radio-val {
   margin-right: 20px;
+}
+
+.set-pattern .radio-title {
+    background: #42424261;
+}
+
+.set-pattern .radio-option {
+    background: #42424261;
+    padding: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.set-pattern { 
+    max-width: 660px;
 }
 
 .error {
@@ -228,7 +247,7 @@ body {
 
 .isVisible, .isNotVisible {
     overflow-y: hidden;
-    max-height: 100vh;
+    max-height: 105vh;
     transition-property: all;
     transition-duration: 1s;
     transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
@@ -236,6 +255,17 @@ body {
 
 .isNotVisible {
     max-height: 95px;
+}
+
+@media only screen and (min-width: 1024px) {
+    .col-md-9 {
+        max-width: 660px;
+    }
+
+    .option-row input[type="number"] {
+        width: 61%;
+    }
+
 }
 
 @media only screen and (max-width: 1200px) {

@@ -103,6 +103,8 @@ class App extends Component {
         this.currentBPM = 1500;
     }
 
+    this.stopTheDisplay()
+
     this.setState(
       {
         bpm: value
@@ -329,7 +331,7 @@ class App extends Component {
               <div className="col-sm-12 col-md-3">
                 <label>Set strumming pattern</label>
               </div>
-              <div className="col-sm-12 col-md-9">
+              <div className="col-sm-12 col-md-9 set-pattern">
                 {strummingPattern.map(button => {
                   return (
                     <RadioButton
@@ -345,10 +347,10 @@ class App extends Component {
             <div className="option-row row">
               <div className="col-sm-12 col-md-3" />
               <div className="col-sm-12 col-md-9">
-                <button className="app-button" onClick={this.setTheDisplay}>
+                <button className={!this.state.isWorking ? "active app-button" : "app-button"} onClick={this.setTheDisplay}>
                   {this.state.started}
                 </button>
-                <button className="app-button stop" onClick={this.stopTheDisplay}>
+                <button className={this.state.isWorking ? "active app-button stop" : "app-button stop"} onClick={this.stopTheDisplay}>
                   Stop
                 </button>
               </div>
