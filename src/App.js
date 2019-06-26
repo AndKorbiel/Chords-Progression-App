@@ -60,7 +60,8 @@ class App extends Component {
     started: "Start",
     menuIsVisible: true,
     isLoading: true,
-    isWorking: false
+    isWorking: false,
+    isMuted: false
   };
 
   child = React.createRef();
@@ -70,12 +71,13 @@ class App extends Component {
   componentDidMount() {
     setTimeout(()=> {
         this.setState({isLoading: false})
-    }, 1000)
+    }, 1500)
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.setState(({ pickedChords }) => ({
-      pickedChords: arrayMove(pickedChords, oldIndex, newIndex)
+      pickedChords: arrayMove(pickedChords, oldIndex, newIndex),
+      isWorking: false
     }
     ))
   };
@@ -171,7 +173,8 @@ class App extends Component {
     const usunietyElement = updatedChords.splice(index, 1);
 
     this.setState({
-      pickedChords: updatedChords
+      pickedChords: updatedChords, 
+      isWorking: false
     });
   };
 
@@ -227,7 +230,7 @@ class App extends Component {
         }
 
         this.intervalAnother = setInterval( () => {
-          if(this.state.isWorking) {
+          if(this.state.isWorking && !this.state.isMuted) {
             kick.play();
                 kick.volume = 0.2;
                 setTimeout(() => {
@@ -239,6 +242,12 @@ class App extends Component {
             }, this.currentBPM / 4
         );
   };
+
+  muteAudio = () => {
+    this.setState({
+      isMuted: !this.state.isMuted
+    })
+  }
 
   hideMenu = () => {
 
@@ -352,6 +361,9 @@ class App extends Component {
                 </button>
                 <button className={this.state.isWorking ? "active app-button stop" : "app-button stop"} onClick={this.stopTheDisplay}>
                   Stop
+                </button>
+                <button className="app-button mute" onClick={this.muteAudio}>
+                  <i className={this.state.isMuted ? 'fas fa-volume-up' : 'fas fa-volume-mute'}></i>
                 </button>
               </div>
             </div>
