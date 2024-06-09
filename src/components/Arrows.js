@@ -1,24 +1,23 @@
-import React, { Component } from "react";
-import "./arrows.css";
+import React, { Component } from 'react';
+import './arrows.css';
 
 const arrowS = [
-  "arrow1",
-  "arrow2",
-  "arrow3",
-  "arrow4",
-  "arrow5",
-  "arrow6",
-  "arrow7",
-  "arrow8"
+  'arrow1',
+  'arrow2',
+  'arrow3',
+  'arrow4',
+  'arrow5',
+  'arrow6',
+  'arrow7',
+  'arrow8',
 ];
 
-class arrows extends Component {
+export class Arrows extends Component {
   state = {
-    arrowsState: arrowS.map(() => ({ isHighlighted: false, speed: "one" }))
+    arrowsState: arrowS.map(() => ({ isHighlighted: false, speed: 'one' })),
   };
 
   arrowHighlight = () => {
-
     let i = 0;
     let speed = this.getSpeed();
 
@@ -39,29 +38,29 @@ class arrows extends Component {
 
       this.setState(
         {
-          arrowsState: newArrowsStateCopy
+          arrowsState: newArrowsStateCopy,
         },
-        () => setTimeout(highlight, this.props.BPM / 8)
+        () => setTimeout(highlight, this.props.BPM / 8),
       );
     };
     highlight();
   };
 
   getSpeed = () => {
-    let speed = "one";
+    let speed = 'one';
 
     if (this.props.BPM == 1500) {
-      speed = "one";
+      speed = 'one';
     } else if (this.props.BPM == 1716) {
-      speed = "two";
+      speed = 'two';
     } else if (this.props.BPM == 2000) {
-      speed = "three";
+      speed = 'three';
     } else if (this.props.BPM == 2180) {
-      speed = "four";
+      speed = 'four';
     } else if (this.props.BPM == 2668) {
-      speed = "five";
+      speed = 'five';
     } else if (this.props.BPM == 3000) {
-      speed = "six";
+      speed = 'six';
     }
     return speed;
   };
@@ -74,22 +73,18 @@ class arrows extends Component {
         {strummingPattern.map((element, index) => {
           const arrowState = this.state.arrowsState[index];
           const highlightedClass = arrowState.isHighlighted
-            ? " highlighted "
-            : " ";
+            ? ' highlighted '
+            : ' ';
           const classes = highlightedClass + arrowState.speed;
 
           return (
             <div
-              className={"arrow fas fa-arrow-" + element.value + classes}
+              className={'arrow fas fa-arrow-' + element.value + classes}
               key={element.id}
-            >
-              {" "}
-            </div>
+            ></div>
           );
         })}
       </div>
     );
   }
 }
-
-export default arrows;

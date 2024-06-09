@@ -1,0 +1,28 @@
+.radio-option {
+  display: block;
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: 20%;
+}
+
+.radio-option input[type='radio'] {
+  margin-top: 7px;
+  width: 20%;
+  display: block;
+  float: left;
+}
+
+.radio-option .radio-val {
+  margin-right: 10px;
+  width: 60%;
+  display: block;
+  float: left;
+  text-transform: capitalize;
+  margin-left: 3px;
+}
+
+.radio-title {
+  display: block;
+  text-align: center;
+}

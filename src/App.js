@@ -1,67 +1,30 @@
-import React, { Component } from "react";
-import "./App.css";
-import RadioButton from "./radio-button.js";
-import Display from "./display";
-import arrayMove from "array-move";
-
-const SPACE_CHORD = "Line Break";
-const CHORDS = [
-  "C",
-  "Cm",
-  "C#",
-  "C#m",
-  "D",
-  "Dm",
-  "D#",
-  "D#m",
-  "E",
-  "Em",
-  "F",
-  "Fm",
-  "F#",
-  "F#m",
-  "G",
-  "Gm",
-  "G#",
-  "G#m",
-  "A",
-  "Am",
-  "A#",
-  "A#m",
-  "B",
-  "Bm",
-  SPACE_CHORD
-];
-
-const DEFAULT_STRUMMING_PATTERN = [
-  { id: "1", value: "down" },
-  { id: "1and", value: "down" },
-  { id: "2", value: "down" },
-  { id: "2and", value: "down" },
-  { id: "3", value: "down" },
-  { id: "3and", value: "down" },
-  { id: "4", value: "down" },
-  { id: "4and", value: "down" }
-];
-const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
-
-const kick = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Kicks/14[kb]analogbd.aif.mp3');
-const hat = new Audio('https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Hats/16[kb]ec-hat081.wav.mp3');
+import React, { Component } from 'react';
+import './App.css';
+import { Display, RadioButton } from './components/';
+import arrayMove from 'array-move';
+import {
+  BPM_OPTIONS,
+  CHORDS,
+  DEFAULT_STRUMMING_PATTERN,
+  SPACE_CHORD,
+  hat,
+  kick,
+} from './constants';
 
 class App extends Component {
   state = {
     pickedChords: [],
-    currentChord: "",
-    nextChord: "",
+    currentChord: '',
+    nextChord: '',
     chordsQuantity: 0,
-    bpm: "80",
+    bpm: '80',
     strummingPattern: DEFAULT_STRUMMING_PATTERN,
-    errorMessage: "",
-    started: "Start",
+    errorMessage: '',
+    started: 'Start',
     menuIsVisible: true,
     isLoading: true,
     isWorking: false,
-    isMuted: false
+    isMuted: false,
   };
 
   child = React.createRef();
@@ -69,71 +32,68 @@ class App extends Component {
   interval = null;
 
   componentDidMount() {
-    setTimeout(()=> {
-        this.setState({isLoading: false})
-    }, 1500)
+    setTimeout(() => {
+      this.setState({ isLoading: false });
+    }, 1500);
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.setState(({ pickedChords }) => ({
       pickedChords: arrayMove(pickedChords, oldIndex, newIndex),
-      isWorking: false
-    }
-    ))
+      isWorking: false,
+    }));
   };
 
-  getBPM = e => {
+  getBPM = (e) => {
     let value = e.target.value;
 
     switch (value) {
-      case "80":
+      case '80':
         this.currentBPM = 3000;
         break;
-      case "90":
+      case '90':
         this.currentBPM = 2668;
         break;
-      case "110":
+      case '110':
         this.currentBPM = 2180;
         break;
-      case "120":
+      case '120':
         this.currentBPM = 2000;
         break;
-      case "140":
+      case '140':
         this.currentBPM = 1716;
         break;
-      case "160":
+      case '160':
         this.currentBPM = 1500;
     }
 
-    this.stopTheDisplay()
+    this.stopTheDisplay();
 
-    this.setState(
-      {
-        bpm: value
-      }
-    );
+    this.setState({
+      bpm: value,
+    });
   };
 
   getStrummingPattern = (e, id) => {
     const newPattern = [...this.state.strummingPattern];
-    const updated = newPattern.find(el => el.id === id);
+    const updated = newPattern.find((el) => el.id === id);
     updated.value = e.target.value;
     this.setState({
-      strummingPattern: newPattern
+      strummingPattern: newPattern,
     });
   };
 
-  getNumberOfRandomChords = e => {
+  getNumberOfRandomChords = (e) => {
     let number = Number(e.target.value);
     if (number <= 36 && number > 0) {
       this.setState({
         chordsQuantity: number,
-        errorMessage: ""
+        errorMessage: '',
       });
     } else {
       this.setState({
         chordsQuantity: null,
-        errorMessage: "Incorrect value"
+        errorMessage: 'Incorrect value',
       });
     }
   };
@@ -142,64 +102,65 @@ class App extends Component {
     if (this.state.chordsQuantity === 0) {
       this.setState({
         chordsQuantity: null,
-        errorMessage: "Incorrect value"
+        errorMessage: 'Incorrect value',
       });
     } else {
       let pickedRandomChords = [];
 
       for (let i = 0; i < this.state.chordsQuantity; i++) {
         pickedRandomChords.push(
-          CHORDS[Math.floor(Math.random() * CHORDS.length)]
+          CHORDS[Math.floor(Math.random() * CHORDS.length)],
         );
       }
 
       this.setState({
-        pickedChords: pickedRandomChords
+        pickedChords: pickedRandomChords,
       });
-      }
+    }
   };
 
-  selectChord = chord => {
+  selectChord = (chord) => {
     let updatedChords = [...this.state.pickedChords];
     updatedChords.push(chord);
 
     this.setState({
-      pickedChords: updatedChords
+      pickedChords: updatedChords,
     });
   };
 
-  removeChord = index => {
+  removeChord = (index) => {
     let updatedChords = [...this.state.pickedChords];
+    // WTF ???
     const usunietyElement = updatedChords.splice(index, 1);
 
     this.setState({
-      pickedChords: updatedChords, 
-      isWorking: false
+      pickedChords: updatedChords,
+      isWorking: false,
     });
   };
 
   setTheDisplay = () => {
     this.setState({
-      isWorking: true
-    })
+      isWorking: true,
+    });
 
-      let i = 0;
+    let i = 0;
     let j = 1;
     if (this.interval != null) {
       clearInterval(this.interval);
-    };
+    }
 
     let pickedChordsWithoutSpace = this.state.pickedChords.filter(
-      chord => chord != SPACE_CHORD
+      (chord) => chord != SPACE_CHORD,
     );
 
     this.interval = setInterval(() => {
       if (this.state.isWorking) {
         this.setState({
           currentChord: pickedChordsWithoutSpace[i++],
-          nextChord: pickedChordsWithoutSpace[j++]
+          nextChord: pickedChordsWithoutSpace[j++],
         });
-  
+
         if (i == pickedChordsWithoutSpace.length) {
           i = 0;
         } else if (j == pickedChordsWithoutSpace.length) {
@@ -207,85 +168,87 @@ class App extends Component {
         }
         this.child.current.arrowHighlight();
       }
-      
-
     }, this.currentBPM);
 
     setTimeout(this.audioPlay, this.currentBPM);
 
     this.setState({
-      started: "Restart"
+      started: 'Restart',
     });
   };
 
   stopTheDisplay = () => {
     this.setState({
-      isWorking: false
-    })
-  }
+      isWorking: false,
+    });
+  };
 
   audioPlay = () => {
-        if (this.intervalAnother != null) {
-            clearInterval(this.intervalAnother)
-        }
+    if (this.intervalAnother != null) {
+      clearInterval(this.intervalAnother);
+    }
 
-        this.intervalAnother = setInterval( () => {
-          if(this.state.isWorking && !this.state.isMuted) {
-            kick.play();
-                kick.volume = 0.2;
-                setTimeout(() => {
-                        hat.play();
-                        hat.volume = 0.5;
-                    }, this.currentBPM / 8
-                );
-          }
-            }, this.currentBPM / 4
-        );
+    this.intervalAnother = setInterval(() => {
+      if (this.state.isWorking && !this.state.isMuted) {
+        kick.play();
+        kick.volume = 0.2;
+        setTimeout(() => {
+          hat.play();
+          hat.volume = 0.5;
+        }, this.currentBPM / 8);
+      }
+    }, this.currentBPM / 4);
   };
 
   muteAudio = () => {
     this.setState({
-      isMuted: !this.state.isMuted
-    })
-  }
+      isMuted: !this.state.isMuted,
+    });
+  };
 
   hideMenu = () => {
-
     let menuState = this.state.menuIsVisible === true ? false : true;
-    console.log(menuState)
+    console.log(menuState);
 
     this.setState({
-        menuIsVisible: menuState
-    })
+      menuIsVisible: menuState,
+    });
   };
 
   render() {
-    const {
-      pickedChords,
-      strummingPattern,
-      currentChord,
-      nextChord
-    } = this.state;
+    const { pickedChords, strummingPattern, currentChord, nextChord } =
+      this.state;
 
     return (
-
-      <div className={ this.state.isLoading ? "hidden" : "visible" + " App container"}>
+      <div
+        className={
+          this.state.isLoading ? 'hidden' : 'visible' + ' App container'
+        }
+      >
         <div className="row">
-          <div className={(this.state.menuIsVisible === true ? "isVisible" : "isNotVisible")  + " col-sm-12 app-options"}>
+          <div
+            className={
+              (this.state.menuIsVisible === true
+                ? 'isVisible'
+                : 'isNotVisible') + ' col-sm-12 app-options'
+            }
+          >
             <div className="option-row row">
               <div className="col-sm-12">
-                  <h2 className="section-title">Options</h2>
+                <h2 className="section-title">Options</h2>
               </div>
               <div className="col-sm-12 col-md-3">
                 <label>Pick Your own chords</label>
               </div>
               <div className="col-sm-12 col-md-9">
                 <ul className="chords-table">
-                  {CHORDS.map(chord => {
+                  {CHORDS.map((chord) => {
                     return (
                       <li
                         key={chord}
-                        className={chord === 'Line Break' ? "lineBreakList" : null}
+                        className={
+                          chord === 'Line Break' ? 'lineBreakList' : null
+                        }
                         onClick={() => this.selectChord(chord)}
                       >
                         {chord}
@@ -314,37 +277,41 @@ class App extends Component {
                 </button>
               </div>
             </div>
+
             <div className="option-row row">
               <div className="col-sm-12 col-md-3">
                 <label>Choose BPM</label>
               </div>
+
               <div className="col-sm-12 col-md-9" onChange={this.getBPM}>
-                {BPM_OPTIONS.map(option => {
+                {BPM_OPTIONS.map((option) => {
                   return (
                     <React.Fragment key={`bmp_${option}`}>
                       <div className="radioSpan">
-                      <input
-                        type="radio"
-                        name="bpm"
-                        value={option}
-                        checked={option == this.state.bpm}
-                      />
-                      <span className="radio-val"> {option}</span>
+                        <input
+                          type="radio"
+                          name="bpm"
+                          value={option}
+                          checked={option === this.state.bpm}
+                          onChange={() => {}}
+                        />
+                        <span className="radio-val"> {option}</span>
                       </div>
                     </React.Fragment>
                   );
                 })}
               </div>
             </div>
+
             <div className="option-row row">
               <div className="col-sm-12 col-md-3">
                 <label>Set strumming pattern</label>
               </div>
               <div className="col-sm-12 col-md-9 set-pattern">
-                {strummingPattern.map(button => {
+                {strummingPattern.map((button) => {
                   return (
                     <RadioButton
-                      onChange={e => this.getStrummingPattern(e, button.id)}
+                      onChange={(e) => this.getStrummingPattern(e, button.id)}
                       key={button.id}
                       buttonName={button.id}
                       currentValue={button.value}
@@ -356,18 +323,43 @@ class App extends Component {
             <div className="option-row row">
               <div className="col-sm-12 col-md-3" />
               <div className="col-sm-12 col-md-9">
-                <button className={!this.state.isWorking ? "active app-button" : "app-button"} onClick={this.setTheDisplay}>
+                <button
+                  className={
+                    !this.state.isWorking ? 'active app-button' : 'app-button'
+                  }
+                  onClick={this.setTheDisplay}
+                >
                   {this.state.started}
                 </button>
-                <button className={this.state.isWorking ? "active app-button stop" : "app-button stop"} onClick={this.stopTheDisplay}>
+                <button
+                  className={
+                    this.state.isWorking
+                      ? 'active app-button stop'
+                      : 'app-button stop'
+                  }
+                  onClick={this.stopTheDisplay}
+                >
                   Stop
                 </button>
                 <button className="app-button mute" onClick={this.muteAudio}>
-                  <i className={this.state.isMuted ? 'fas fa-volume-up' : 'fas fa-volume-mute'}></i>
+                  <i
+                    className={
+                      this.state.isMuted
+                        ? 'fas fa-volume-up'
+                        : 'fas fa-volume-mute'
+                    }
+                  ></i>
                 </button>
               </div>
             </div>
-              <i className={(this.state.menuIsVisible === true ? "fas fa-chevron-up slideUpButton" : "fas fa-chevron-down slideUpButton")} onClick={this.hideMenu}></i>
+            <i
+              className={
+                this.state.menuIsVisible === true
+                  ? 'fas fa-chevron-up slideUpButton'
+                  : 'fas fa-chevron-down slideUpButton'
+              }
+              onClick={this.hideMenu}
+            ></i>
           </div>
           <Display
             strummingPattern={strummingPattern}
@@ -379,7 +371,7 @@ class App extends Component {
             child={this.child}
             items={this.state.pickedChords}
             onSortEnd={this.onSortEnd}
-            axis={"x"}
+            axis={'x'}
           />
         </div>
       </div>
