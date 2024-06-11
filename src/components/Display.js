@@ -34,7 +34,7 @@ export const Display = ({
       <Arrows
         BPM={currentBPM}
         strummingPattern={strummingPattern}
-        ref={child}
+        refs={child}
       />
 
       <p className="displayed-chord">

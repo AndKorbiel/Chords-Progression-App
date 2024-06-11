@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Display, RadioButton } from './components/';
+import { Display, Menu, RadioButton } from './components/';
 import arrayMove from 'array-move';
 import {
   BPM_OPTIONS,
@@ -22,7 +22,6 @@ class App extends Component {
     errorMessage: '',
     started: 'Start',
     menuIsVisible: true,
-    isLoading: true,
     isWorking: false,
     isMuted: false,
   };
@@ -30,12 +29,6 @@ class App extends Component {
   child = React.createRef();
   currentBPM = 3000;
   interval = null;
-
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({ isLoading: false });
-    }, 1500);
-  }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.setState(({ pickedChords }) => ({
@@ -220,147 +213,26 @@ class App extends Component {
       this.state;
 
     return (
-      <div
-        className={
-          this.state.isLoading ? 'hidden' : 'visible' + ' App container'
-        }
-      >
+      <div className={'App container'}>
         <div className="row">
-          <div
-            className={
-              (this.state.menuIsVisible === true
-                ? 'isVisible'
-                : 'isNotVisible') + ' col-sm-12 app-options'
-            }
-          >
-            <div className="option-row row">
-              <div className="col-sm-12">
-                <h2 className="section-title">Options</h2>
-              </div>
-              <div className="col-sm-12 col-md-3">
-                <label>Pick Your own chords</label>
-              </div>
-              <div className="col-sm-12 col-md-9">
-                <ul className="chords-table">
-                  {CHORDS.map((chord) => {
-                    return (
-                      <li
-                        key={chord}
-                        className={
-                          chord === 'Line Break' ? 'lineBreakList' : null
-                        }
-                        onClick={() => this.selectChord(chord)}
-                      >
-                        {chord}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </div>
-            <div className="option-row row">
-              <div className="col-sm-12 col-md-3">
-                <label>Or use random set</label>
-                <span className="error">{this.state.errorMessage}</span>
-              </div>
-              <div className="col-sm-12 col-md-9">
-                <input
-                  type="number"
-                  onChange={this.getNumberOfRandomChords}
-                  value={this.state.chordsQuantity}
-                />
-                <button
-                  className="app-button random"
-                  onClick={this.generateRandomChords}
-                >
-                  Get random chords
-                </button>
-              </div>
-            </div>
+          <Menu
+            bpm={this.state.bpm}
+            errorMessage={this.state.errorMessage}
+            strummingPattern={this.state.strummingPattern}
+            selectChord={this.selectChord}
+            getNumberOfRandomChords={this.getNumberOfRandomChords}
+            getStrummingPattern={this.getStrummingPattern}
+            chordsQuantity={this.state.chordsQuantity}
+            generateRandomChords={this.generateRandomChords}
+            getBPM={this.getBPM}
+            isWorking={this.state.isWorking}
+            setTheDisplay={this.setTheDisplay}
+            started={this.state.started}
+            stopTheDisplay={this.stopTheDisplay}
+            muteAudio={this.muteAudio}
+            isMuted={this.state.isMuted}
+          />
 
-            <div className="option-row row">
-              <div className="col-sm-12 col-md-3">
-                <label>Choose BPM</label>
-              </div>
-
-              <div className="col-sm-12 col-md-9" onChange={this.getBPM}>
-                {BPM_OPTIONS.map((option) => {
-                  return (
-                    <React.Fragment key={`bmp_${option}`}>
-                      <div className="radioSpan">
-                        <input
-                          type="radio"
-                          name="bpm"
-                          value={option}
-                          checked={option === this.state.bpm}
-                          onChange={() => {}}
-                        />
-                        <span className="radio-val"> {option}</span>
-                      </div>
-                    </React.Fragment>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="option-row row">
-              <div className="col-sm-12 col-md-3">
-                <label>Set strumming pattern</label>
-              </div>
-              <div className="col-sm-12 col-md-9 set-pattern">
-                {strummingPattern.map((button) => {
-                  return (
-                    <RadioButton
-                      onChange={(e) => this.getStrummingPattern(e, button.id)}
-                      key={button.id}
-                      buttonName={button.id}
-                      currentValue={button.value}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-            <div className="option-row row">
-              <div className="col-sm-12 col-md-3" />
-              <div className="col-sm-12 col-md-9">
-                <button
-                  className={
-                    !this.state.isWorking ? 'active app-button' : 'app-button'
-                  }
-                  onClick={this.setTheDisplay}
-                >
-                  {this.state.started}
-                </button>
-                <button
-                  className={
-                    this.state.isWorking
-                      ? 'active app-button stop'
-                      : 'app-button stop'
-                  }
-                  onClick={this.stopTheDisplay}
-                >
-                  Stop
-                </button>
-                <button className="app-button mute" onClick={this.muteAudio}>
-                  <i
-                    className={
-                      this.state.isMuted
-                        ? 'fas fa-volume-up'
-                        : 'fas fa-volume-mute'
-                    }
-                  ></i>
-                </button>
-              </div>
-            </div>
-            <i
-              className={
-                this.state.menuIsVisible === true
-                  ? 'fas fa-chevron-up slideUpButton'
-                  : 'fas fa-chevron-down slideUpButton'
-              }
-              onClick={this.hideMenu}
-            ></i>
-          </div>
           <Display
             strummingPattern={strummingPattern}
             pickedChords={pickedChords}
