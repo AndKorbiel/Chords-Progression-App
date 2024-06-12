@@ -8,23 +8,7 @@ import {
   StrummingPatternOptions,
 } from './Menu/';
 
-export const Menu = ({
-  bpm,
-  errorMessage,
-  strummingPattern,
-  selectChord,
-  getNumberOfRandomChords,
-  getStrummingPattern,
-  chordsQuantity,
-  generateRandomChords,
-  getBPM,
-  isWorking,
-  setTheDisplay,
-  started,
-  stopTheDisplay,
-  muteAudio,
-  isMuted,
-}) => {
+export const Menu = ({ child, state, setState }) => {
   const [menuIsVisible, toggleMenuVisible] = useState(true);
 
   return (
@@ -34,30 +18,16 @@ export const Menu = ({
         ' col-sm-12 app-options'
       }
     >
-      <ChordsOptions selectChord={selectChord} />
-
-      <RandomChordsGenerator
-        chordsQuantity={chordsQuantity}
-        errorMessage={errorMessage}
-        generateRandomChords={generateRandomChords}
-        getNumberOfRandomChords={getNumberOfRandomChords}
-      />
-
-      <BpmOptions bpm={bpm} getBPM={getBPM} />
+      <ChordsOptions setState={setState} />
+      <RandomChordsGenerator setState={setState} />
+      <BpmOptions bpm={state.bpm} setState={setState} />
 
       <StrummingPatternOptions
-        getStrummingPattern={getStrummingPattern}
-        strummingPattern={strummingPattern}
+        setState={setState}
+        strummingPattern={state.strummingPattern}
       />
 
-      <AppControlOptions
-        isMuted={isMuted}
-        isWorking={isWorking}
-        muteAudio={muteAudio}
-        setTheDisplay={setTheDisplay}
-        started={started}
-        stopTheDisplay={stopTheDisplay}
-      />
+      <AppControlOptions child={child} state={state} setState={setState} />
 
       <i
         className={

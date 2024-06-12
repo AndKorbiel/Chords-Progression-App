@@ -3,16 +3,15 @@ import { Arrows } from './Arrows';
 import ReactTooltip from 'react-tooltip';
 import { SortableList } from './SortableList';
 
-export const Display = ({
-  pickedChords,
-  strummingPattern,
-  currentChord,
-  nextChord,
-  currentBPM,
-  child,
-  onSortEnd,
-  onClick,
-}) => {
+export const Display = ({ setState, state }) => {
+  const {
+    currentBPM,
+    currentChord,
+    nextChord,
+    pickedChords,
+    strummingPattern,
+  } = state;
+
   return (
     <div id="player" className="col-sm-12">
       <button
@@ -26,16 +25,11 @@ export const Display = ({
 
       <SortableList
         pickedChords={pickedChords}
-        onClick={onClick}
-        onSortEnd={onSortEnd}
+        setState={setState}
         disableAutoscroll={true}
       />
 
-      <Arrows
-        BPM={currentBPM}
-        strummingPattern={strummingPattern}
-        refs={child}
-      />
+      <Arrows BPM={currentBPM} strummingPattern={strummingPattern} />
 
       <p className="displayed-chord">
         {currentChord}

@@ -1,10 +1,18 @@
 import React from 'react';
 import { RadioButton } from '../';
 
-export const StrummingPatternOptions = ({
-  getStrummingPattern,
-  strummingPattern,
-}) => {
+export const StrummingPatternOptions = ({ setState, strummingPattern }) => {
+  const getStrummingPattern = (e, id) => {
+    const newPattern = [...strummingPattern];
+    const updated = newPattern.find((el) => el.id === id);
+    updated.value = e.target.value;
+
+    setState((state) => ({
+      ...state,
+      strummingPattern: newPattern,
+    }));
+  };
+
   return (
     <div className="option-row row">
       <div className="col-sm-12 col-md-3">

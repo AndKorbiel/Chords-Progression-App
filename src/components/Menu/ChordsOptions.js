@@ -1,7 +1,14 @@
 import React from 'react';
 import { CHORDS } from '../../constants';
 
-export const ChordsOptions = ({ selectChord }) => {
+export const ChordsOptions = ({ setState }) => {
+  const selectChord = (chord) => {
+    setState((state) => ({
+      ...state,
+      pickedChords: [...state.pickedChords, chord],
+    }));
+  };
+
   return (
     <div className="option-row row">
       <div className="col-sm-12">
