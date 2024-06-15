@@ -5,7 +5,7 @@ import { getBPM } from '../../utils/utils';
 export const BpmOptions = ({ bpm, setState }) => {
   const handleOnChange = (e) => {
     const value = e.target.value;
-    const { nextBPM } = getBPM(value);
+    const nextBPM = getBPM(value);
 
     setState((state) => ({
       ...state,

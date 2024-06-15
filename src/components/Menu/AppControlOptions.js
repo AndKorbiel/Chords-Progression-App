@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { SPACE_CHORD, kick, hat } from '../../constants';
 
-export const AppControlOptions = ({ child, state, setState }) => {
-  const { currentBPM, isMuted, isWorking, pickedChords, started } = state;
-  let interval = null;
-  let intervalAnother = null;
+export const AppControlOptions = ({ state, setState }) => {
+  const { currentBPM, pickedChords, started } = state;
+  const [isWorking, setIsWorking] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef(null);
+  const displayRef = useRef(null);
 
-  const audioPlay = () => {
-    if (intervalAnother != null) {
-      clearInterval(intervalAnother);
-    }
-
-    intervalAnother = setInterval(() => {
-      if (isWorking && !isMuted) {
+  const audioPlay = useCallback(() => {
+    audioRef.current = setInterval(() => {
+      if (isWorking) {
         kick.play();
         kick.volume = 0.2;
         setTimeout(() => {
@@ -21,34 +19,53 @@ export const AppControlOptions = ({ child, state, setState }) => {
         }, currentBPM / 8);
       }
     }, currentBPM / 4);
-  };
+  }, [currentBPM, isWorking]);
 
   const muteAudio = () => {
-    setState((state) => ({
-      ...state,
-      isMuted: !isMuted,
-    }));
+    if (isMuted) {
+      setIsMuted(!isMuted);
+      audioPlay();
+    } else {
+      setIsMuted(!isMuted);
+      clearInterval(audioRef.current);
+      audioRef.current = null;
+    }
   };
 
   const setTheDisplay = () => {
     setState((state) => ({
       ...state,
+      started: 'Restart',
       isWorking: true,
     }));
 
+    setIsWorking(true);
+  };
+
+  const stopTheDisplay = () => {
+    setIsWorking(false);
+    clearInterval(displayRef.current);
+    clearInterval(audioRef.current);
+    displayRef.current = null;
+    audioRef.current = null;
+
+    setState((state) => ({
+      ...state,
+      started: 'Start',
+      isWorking: false,
+    }));
+  };
+
+  useEffect(() => {
     let i = 0;
     let j = 1;
 
-    if (interval != null) {
-      clearInterval(interval);
-    }
+    if (isWorking) {
+      let pickedChordsWithoutSpace = pickedChords.filter(
+        (chord) => chord !== SPACE_CHORD,
+      );
 
-    let pickedChordsWithoutSpace = pickedChords.filter(
-      (chord) => chord !== SPACE_CHORD,
-    );
-
-    interval = setInterval(() => {
-      if (isWorking) {
+      displayRef.current = setInterval(() => {
         setState((state) => ({
           ...state,
           currentChord: pickedChordsWithoutSpace[i++],
@@ -57,28 +74,17 @@ export const AppControlOptions = ({ child, state, setState }) => {
 
         if (i === pickedChordsWithoutSpace.length) {
           i = 0;
-        } else if (j === pickedChordsWithoutSpace.length) {
-          j = 0;
         }
 
-        child.current.arrowHighlight();
-      }
-    }, currentBPM);
+        if (j === pickedChordsWithoutSpace.length) {
+          j = 0;
+        }
+        // child.current.arrowHighlight();
+      }, currentBPM);
 
-    setTimeout(audioPlay, currentBPM);
-
-    setState((state) => ({
-      ...state,
-      started: 'Restart',
-    }));
-  };
-
-  const stopTheDisplay = () => {
-    setState((state) => ({
-      ...state,
-      isWorking: false,
-    }));
-  };
+      setTimeout(audioPlay, currentBPM);
+    }
+  }, [audioPlay, currentBPM, isWorking, pickedChords, setState]);
 
   return (
     <div className="option-row row">

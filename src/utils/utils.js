@@ -1,29 +1,46 @@
 export const getBPM = (value) => {
-  let nextBPM;
-
   switch (value) {
-    case 80:
-      nextBPM = 3000;
-      break;
-    case 90:
-      nextBPM = 2668;
-      break;
-    case 110:
-      nextBPM = 2180;
-      break;
-    case 120:
-      nextBPM = 2000;
-      break;
-    case 140:
-      nextBPM = 1716;
-      break;
-    case 160:
-      nextBPM = 1500;
-      break;
-    default:
-      nextBPM = 3000;
-      break;
-  }
+    case '80':
+      return 3000;
 
-  return { nextBPM };
+    case '90':
+      return 2668;
+
+    case '110':
+      return 2180;
+
+    case '120':
+      return 2000;
+
+    case '140':
+      return 1716;
+
+    case '160':
+      return 1500;
+
+    default:
+      return 3000;
+  }
+};
+
+export const getArrowAnimationSpeed = (BPM) => {
+  switch (BPM) {
+    case 1500:
+      return 'one';
+
+    case 1716:
+      return 'two';
+
+    case 2000:
+      return 'three';
+
+    case 2180:
+      return 'four';
+
+    case 2668:
+      return 'five';
+
+    default:
+      return 'six';
+  }
 };

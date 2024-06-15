@@ -7,6 +7,7 @@ export const Display = ({ setState, state }) => {
   const {
     currentBPM,
     currentChord,
+    isWorking,
     nextChord,
     pickedChords,
     strummingPattern,
@@ -20,16 +21,17 @@ export const Display = ({ setState, state }) => {
       >
         <i className="fas fa-question-circle"></i>
       </button>
-
       <ReactTooltip place="top" type="dark" effect="float" />
-
       <SortableList
         pickedChords={pickedChords}
         setState={setState}
         disableAutoscroll={true}
       />
-
-      <Arrows BPM={currentBPM} strummingPattern={strummingPattern} />
+      <Arrows
+        BPM={currentBPM}
+        isWorking={isWorking}
+        strummingPattern={strummingPattern}
+      />
 
       <p className="displayed-chord">
         {currentChord}

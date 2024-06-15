@@ -1,3 +1,6 @@
+import kickSound from './assets/kick.mp3';
+import hatSound from './assets/hat.mp3';
+
 export const SPACE_CHORD = 'Line Break';
 
 export const CHORDS = [
@@ -39,10 +42,17 @@ export const DEFAULT_STRUMMING_PATTERN = [
   { id: '4and', value: 'down' },
 ];
 export const BPM_OPTIONS = [80, 90, 110, 120, 140, 160];
-export const kickSound =
-  'https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Kicks/14[kb]analogbd.aif.mp3';
-export const hatSound =
-  'https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Hats/16[kb]ec-hat081.wav.mp3';
 
 export const kick = new Audio(kickSound);
 export const hat = new Audio(hatSound);
+
+export const arrowsList = [
+  'arrow1',
+  'arrow2',
+  'arrow3',
+  'arrow4',
+  'arrow5',
+  'arrow6',
+  'arrow7',
+  'arrow8',
+];
