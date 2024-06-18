@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { Display, Menu } from './components/';
 
@@ -11,18 +11,14 @@ export const App = () => {
     nextChord: '',
     bpm: 80,
     strummingPattern: DEFAULT_STRUMMING_PATTERN,
-    started: 'Start',
-    isWorking: false,
-    isMuted: false,
     currentBPM: 3000,
   };
   const [state, setState] = useState(initState);
-  const child = useRef();
 
   return (
     <div className={'App container'}>
       <div className="row">
-        <Menu child={child} setState={setState} state={state} />
+        <Menu setState={setState} state={state} />
         <Display axis={'x'} setState={setState} state={state} />
       </div>
     </div>

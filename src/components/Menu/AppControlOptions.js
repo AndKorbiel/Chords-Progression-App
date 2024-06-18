@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { SPACE_CHORD, kick, hat } from '../../constants';
 
 export const AppControlOptions = ({ state, setState }) => {
-  const { currentBPM, pickedChords, started } = state;
-  const [isWorking, setIsWorking] = useState(false);
+  const { currentBPM, pickedChords, isWorking } = state;
   const [isMuted, setIsMuted] = useState(false);
+  const [controlButtonLabel, setControlButtonLabel] = useState('Start');
   const audioRef = useRef(null);
   const displayRef = useRef(null);
 
@@ -35,15 +35,13 @@ export const AppControlOptions = ({ state, setState }) => {
   const setTheDisplay = () => {
     setState((state) => ({
       ...state,
-      started: 'Restart',
       isWorking: true,
     }));
 
-    setIsWorking(true);
+    setControlButtonLabel('Restart');
   };
 
   const stopTheDisplay = () => {
-    setIsWorking(false);
     clearInterval(displayRef.current);
     clearInterval(audioRef.current);
     displayRef.current = null;
@@ -51,9 +49,10 @@ export const AppControlOptions = ({ state, setState }) => {
 
     setState((state) => ({
       ...state,
-      started: 'Start',
       isWorking: false,
     }));
+
+    setControlButtonLabel('Start');
   };
 
   useEffect(() => {
@@ -79,7 +78,6 @@ export const AppControlOptions = ({ state, setState }) => {
         if (j === pickedChordsWithoutSpace.length) {
           j = 0;
         }
-        // child.current.arrowHighlight();
       }, currentBPM);
 
       setTimeout(audioPlay, currentBPM);
@@ -94,7 +92,7 @@ export const AppControlOptions = ({ state, setState }) => {
           className={!isWorking ? 'active app-button' : 'app-button'}
           onClick={setTheDisplay}
         >
-          {started}
+          {controlButtonLabel}
         </button>
 
         <button

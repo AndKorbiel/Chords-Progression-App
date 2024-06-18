@@ -8,8 +8,9 @@ import {
   StrummingPatternOptions,
 } from './Menu/';
 
-export const Menu = ({ child, state, setState }) => {
+export const Menu = ({ state, setState }) => {
   const [menuIsVisible, toggleMenuVisible] = useState(true);
+  const { bpm, strummingPattern } = state;
 
   return (
     <div
@@ -20,14 +21,14 @@ export const Menu = ({ child, state, setState }) => {
     >
       <ChordsOptions setState={setState} />
       <RandomChordsGenerator setState={setState} />
-      <BpmOptions bpm={state.bpm} setState={setState} />
+      <BpmOptions bpm={bpm} setState={setState} />
 
       <StrummingPatternOptions
         setState={setState}
-        strummingPattern={state.strummingPattern}
+        strummingPattern={strummingPattern}
       />
 
-      <AppControlOptions child={child} state={state} setState={setState} />
+      <AppControlOptions state={state} setState={setState} />
 
       <i
         className={
